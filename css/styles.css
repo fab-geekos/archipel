@@ -66,7 +66,7 @@
      fixe, donc une fenêtre courte laisse beaucoup moins de place qu'un simple
      pourcentage ne le laisse croire. Le portrait 4:5 est tenu par
      `aspect-ratio`, il ne se déforme jamais. */
-  --card-w: clamp(200px, 23vw, 360px);
+  --card-w: clamp(220px, 31vw, 500px);
   --card-h: calc(var(--card-w) * 1.25);
   --radius: 14px;
 
@@ -350,7 +350,7 @@ body:not(.is-ready) .card { transition: none; }
 /* --- Lecture ---------------------------------------------------------------- */
 
 .readout {
-  max-width: 62ch;
+  max-width: min(88ch, 84vw);
   margin-inline: auto;
   text-align: center;
 }
@@ -377,7 +377,6 @@ body:not(.is-ready) .card { transition: none; }
 
 .readout__desc {
   margin: 10px auto 0;
-  max-width: 58ch;
   color: var(--ink-soft);
   text-wrap: pretty;
 }

@@ -29,18 +29,31 @@ laisse bien moins de place qu'un pourcentage ne le suggère. Vérifié jusqu'à
 1280x450, où la carte se réduit mais où rien n'est coupé. Le portrait 4:5 est
 tenu par `aspect-ratio`, la largeur suit toujours la hauteur.
 
-### Les hauteurs sont figées, pas fluides
+### Les hauteurs sont réservées, pas mesurées
 
-`freezeReadoutHeight()` mesure les descriptions des cinq projets et fige la
-hauteur du bloc de texte sur **le plus haut**. Sans ça, une description de deux
-lignes au lieu de trois raccourcit le bloc, la scène récupère la place, et tout
-remonte d'un cran au changement d'île. Refait à chaque redimensionnement (le
-nombre de lignes dépend de la largeur) et une fois les polices web posées (elles
-changent le nombre de lignes). La région live est mise en sourdine pendant la
-mesure, sinon un lecteur d'écran annoncerait les cinq projets.
+Le bloc de texte occupe la même place quel que soit le projet : `min-height:
+1lh` sur le nom, `min-height: 2lh` sur la description. Sans ça, une description
+plus courte raccourcit le bloc, la scène récupère la place, et tout remonte d'un
+cran au changement d'île.
+
+⚠️ **Réservé en CSS, surtout pas mesuré en JS.** Une version précédente
+mesurait les cinq descriptions et figeait la hauteur sur la plus haute. Défaut
+de fond : une mesure dépend de l'état de mise en page au moment où elle est
+prise. Prise pendant une largeur transitoire du chargement, elle figeait le bloc
+à 1271 px, ce qui écrasait la scène à 0 et rendait les cartes invisibles, **sans
+retour possible** puisque plus rien ne changeait de taille ensuite. Une réserve
+en lignes n'a rien à mesurer, donc rien à rater. Ne pas revenir en arrière.
 
 Pour la même raison, la transition du texte est un **fondu seul**, sans aucun
 déplacement vertical. Demande explicite de Fabien.
+
+### Replacement : deux signaux, pas un
+
+`relayout()` est branché sur un `ResizeObserver` **et** sur l'événement `resize`.
+Ils se rattrapent l'un l'autre : la livraison d'un ResizeObserver est liée à
+l'étape de rendu, donc **suspendue sur un onglet qui ne dessine pas**, tandis
+que `resize` arrive toujours mais seulement quand la fenêtre bouge. La fonction
+est débouncée et idempotente, être appelée deux fois ne coûte rien.
 
 ### Le carrousel
 
@@ -96,6 +109,13 @@ qui reste correct.
 5. **Ouverture en nouvel onglet**, l'archipel reste ouvert derrière.
 6. **Tailles fluides** (`clamp`) plutôt que des paliers, l'usage est
    multi-écrans.
+6bis. ⚠️ **Une description tient en DEUX LIGNES MAXIMUM**, soit environ
+   **180 caractères** (la plus longue actuelle en fait 176). Contrainte
+   permanente de Fabien, à respecter pour **tout projet ajouté plus tard**.
+   Raison : la hauteur du bloc de texte est figée sur la description la plus
+   haute, donc une seule description de trois lignes rabaisse la scène et
+   rétrécit les visuels de **tous** les projets. `freezeReadoutHeight()` émet
+   un `console.warn` si le cas se présente.
 7. **Nom du projet affiché sous le carrousel, pas sur la carte.** L'image doit
    rester pleine. Le nom sur la carte n'apparaît que dans le panneau d'attente,
    tant qu'il n'y a pas d'image.

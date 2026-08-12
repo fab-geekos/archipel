@@ -24,6 +24,11 @@ const els = {
 
 const N = PROJECTS.length;
 
+/* Contrainte permanente posée par Fabien : une description tient en deux
+   lignes, jamais plus. Voir l'en-tête de projects.js. La place correspondante
+   est réservée en CSS (`.readout__desc { min-height: 2lh }`). */
+const MAX_DESC_CHARS = 180;
+
 /* --- Thème ------------------------------------------------------------------
    Même convention que todo et citations-livres : classe `dark` sur <body>,
    clé `<projet>_theme` dans localStorage, clair par défaut, 🌙 pour aller vers
@@ -194,31 +199,20 @@ const prev = () => goTo(active - 1);
 
 /* --- Adaptation à l'écran --------------------------------------------------- */
 
-/* Fige la hauteur du bloc de texte sur le plus haut des projets.
-   Sans ça, une description de deux lignes au lieu de trois raccourcit le bloc,
-   la scène récupère la place, et TOUT remonte d'un cran au changement d'île :
-   le texte comme la carte. On mesure donc les cinq une fois, et on retient le
-   maximum. Refait à chaque redimensionnement, puisque le nombre de lignes
-   dépend de la largeur. */
-function freezeReadoutHeight() {
-  const saved = [els.tagline.textContent, els.name.textContent, els.desc.textContent];
+/* La place du bloc de texte est réservée en CSS (`min-height` en lignes), il
+   n'y a donc rien à mesurer ici. Reste à signaler les descriptions qui
+   dépasseraient la réserve : une seule suffit à faire déborder le bloc. */
+function checkDescriptions() {
+  const tooLong = PROJECTS
+    .filter((p) => p.description.length > MAX_DESC_CHARS)
+    .map((p) => `${p.name} (${p.description.length} car.)`);
 
-  /* La zone est une région live : sans ce silence, le lecteur d'écran
-     annoncerait les cinq projets pendant la mesure. */
-  readout.setAttribute("aria-live", "off");
-  readout.style.height = "auto";
-
-  let tallest = 0;
-  for (const p of PROJECTS) {
-    els.tagline.textContent = p.tagline;
-    els.name.textContent = p.name;
-    els.desc.textContent = p.description;
-    tallest = Math.max(tallest, readout.offsetHeight);
+  if (tooLong.length) {
+    console.warn(
+      `Archipel : description trop longue, à ramener sous ${MAX_DESC_CHARS} ` +
+      `caractères pour tenir en 2 lignes : ${tooLong.join(", ")}`
+    );
   }
-
-  [els.tagline.textContent, els.name.textContent, els.desc.textContent] = saved;
-  readout.style.height = `${tallest}px`;
-  readout.setAttribute("aria-live", "polite");
 }
 
 /* Combien de voisines de chaque côté l'écran peut accueillir sans rogner sur la
@@ -230,18 +224,33 @@ function updateVisibility() {
   maxVisible = w >= 1600 ? 2 : w >= 760 ? 1 : 0;
 }
 
-/* Volontairement un minuteur et non requestAnimationFrame : rAF ne s'exécute
-   pas sur un onglet en arrière-plan, et l'archipel est typiquement ouvert dans
-   un onglet qu'on laisse dormir. Le replacement doit être prêt au retour. */
+/* Un ResizeObserver plutôt que l'événement `resize` de la fenêtre : il se
+   déclenche aussi au tout premier calcul de mise en page, et il suit la scène
+   elle-même. Le minuteur est volontairement un setTimeout et non un
+   requestAnimationFrame : rAF ne s'exécute pas sur un onglet en arrière-plan,
+   et l'archipel est typiquement ouvert dans un onglet qu'on laisse dormir. */
 let resizeTimer = 0;
-addEventListener("resize", () => {
+
+function relayout() {
   clearTimeout(resizeTimer);
   resizeTimer = setTimeout(() => {
     updateVisibility();
-    freezeReadoutHeight();   /* d'abord : il décide de la hauteur de la scène */
     layout();
   }, 90);
-});
+}
+
+/* Les deux signaux, et pas un seul, parce qu'ils se rattrapent l'un l'autre :
+   - le ResizeObserver voit le tout premier calcul de mise en page et les
+     changements de place qui ne viennent pas de la fenêtre, mais sa livraison
+     est liée à l'étape de rendu, donc suspendue sur un onglet qui ne dessine
+     pas ;
+   - l'événement `resize`, lui, arrive dans tous les cas, mais seulement quand
+     c'est la fenêtre qui bouge.
+   `relayout` est débouncé et idempotent, être appelé deux fois ne coûte rien.
+   Pas de boucle possible : `layout()` ne pose que des transformations, il ne
+   change jamais la taille de la scène. */
+new ResizeObserver(relayout).observe(ring);
+addEventListener("resize", relayout);
 
 /* --- Commandes -------------------------------------------------------------- */
 
@@ -306,8 +315,7 @@ dotsEl.append(...dots);
 
 updateVisibility();
 goTo(0, { animate: false });
-freezeReadoutHeight();
-layout();   /* la scène a sa hauteur définitive, les cartes se replacent dedans */
+checkDescriptions();
 
 /* Les cartes sont placées sans transition au premier rendu, sinon elles
    glissent toutes depuis le centre au chargement. On force le calcul de mise
@@ -316,9 +324,6 @@ layout();   /* la scène a sa hauteur définitive, les cartes se replacent dedan
 void document.body.offsetWidth;
 document.body.classList.add("is-ready");
 
-/* Les polices web changent le nombre de lignes des descriptions : on remesure
-   une fois posées, sinon la hauteur figée l'aurait été sur la police de repli. */
-document.fonts?.ready.then(() => {
-  freezeReadoutHeight();
-  layout();
-});
+/* Les polices web changent la taille des cartes via `ch` et la hauteur de
+   ligne : on replace une fois qu'elles sont posées. */
+document.fonts?.ready.then(relayout);

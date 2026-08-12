@@ -16,12 +16,17 @@ Une seule chose à modifier : le tableau `PROJECTS` dans
   id: "mon-projet",
   name: "Mon projet",
   tagline: "Trois mots",
-  description: "Une à trois phrases.",
+  description: "Une à deux phrases, 180 caractères maximum.",
   url: "https://fab-geekos.github.io/mon-projet/",
   hue: 205,          // teinte OKLCH 0-360, à éloigner de celles des voisines
   image: null,       // ou "images/mon-projet.webp"
 }
 ```
+
+⚠️ **La description doit tenir en deux lignes**, soit environ **180 caractères**.
+La hauteur du bloc de texte est figée sur la description la plus haute : une
+seule description trop longue rétrécit les visuels de tous les projets. En cas
+de dépassement, un avertissement s'affiche dans la console du navigateur.
 
 Le carrousel s'adapte tout seul au nombre d'îles. Pousser sur `main` suffit à
 mettre en ligne, GitHub Pages republie en une minute environ.

@@ -3,10 +3,17 @@
    -----------------------------------------------------------------------------
    AJOUTER UN PROJET = ajouter un objet ci-dessous. Rien d'autre à toucher.
 
+   ⚠️ RÈGLE À TENIR : la description doit tenir en DEUX LIGNES MAXIMUM.
+   Soit environ 180 caractères, la plus longue actuelle en fait 176. Ce n'est
+   pas cosmétique : la hauteur du bloc de texte est figée sur la description la
+   plus haute, donc une seule description trop longue rabaisse la scène et
+   RÉTRÉCIT LES VISUELS DE TOUS LES PROJETS. Si c'est dépassé, la console
+   affiche un avertissement au chargement.
+
    id          identifiant court et unique (sert aux ancres et au débogage)
    name        nom affiché sous le carrousel
    tagline     3 à 5 mots, au-dessus du nom
-   description 1 à 3 phrases, sous le nom
+   description 1 à 2 phrases, sous le nom, 180 caractères grand maximum
    url         adresse ouverte au clic (nouvel onglet)
    hue         teinte OKLCH de l'île, 0-360. Colore le halo du fond et le
                panneau d'attente. Prendre une valeur éloignée des voisines.

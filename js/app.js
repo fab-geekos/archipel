@@ -41,6 +41,7 @@ let active = 0;
 let cards = [];
 let dots = [];
 let maxVisible = 2;
+let lastDragNav = -Infinity;   /* horodatage du dernier défilement par glissement */
 
 /* --- Construction ---------------------------------------------------------- */
 
@@ -51,6 +52,7 @@ function buildCard(p, i) {
   a.target = "_blank";
   a.rel = "noopener noreferrer";
   a.dataset.index = String(i);
+  a.draggable = false; /* sinon le navigateur lance son propre glisser de lien */
   a.style.setProperty("--hue", p.hue);
   a.setAttribute("aria-label", `${p.name}, ouvrir dans un nouvel onglet`);
 
@@ -79,8 +81,14 @@ function buildCard(p, i) {
 
   a.append(art, open);
 
-  /* Une île en retrait ne s'ouvre pas : le premier clic l'amène au centre. */
   a.addEventListener("click", (e) => {
+    /* Un glissement se termine par un clic sur la carte relâchée. Sans ce
+       garde-fou, faire défiler à la souris ouvrirait aussi le lien. */
+    if (performance.now() - lastDragNav < 300) {
+      e.preventDefault();
+      return;
+    }
+    /* Une île en retrait ne s'ouvre pas : le premier clic l'amène au centre. */
     if (i !== active) {
       e.preventDefault();
       goTo(i);
@@ -230,7 +238,9 @@ ring.addEventListener("pointerup", (e) => {
   if (dragX === null) return;
   const dx = e.clientX - dragX;
   dragX = null;
-  if (Math.abs(dx) > 44) dx < 0 ? next() : prev();
+  if (Math.abs(dx) <= 44) return;
+  lastDragNav = performance.now();
+  dx < 0 ? next() : prev();
 });
 ring.addEventListener("pointercancel", () => { dragX = null; });
 

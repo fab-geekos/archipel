@@ -191,6 +191,8 @@ body > * { position: relative; z-index: var(--z-card); }
   overflow: hidden;
   text-decoration: none;
   cursor: pointer;
+  user-select: none;
+  -webkit-user-drag: none;
   /* --x, --s, --o, --blur, --z sont posés par app.js à chaque déplacement. */
   transform: translate3d(calc(-50% + var(--x, 0px)), 0, 0) scale(var(--s, 1));
   opacity: var(--o, 1);

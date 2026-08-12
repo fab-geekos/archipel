@@ -56,12 +56,25 @@ active, comme un climat qu'on approche.
 
 ## Couleur
 
-Stratégie **engagée** : une couleur saturée sombre porte toute la surface.
+Stratégie **engagée** dans les deux modes : une couleur saturée porte toute la
+surface, elle ne se contente jamais d'être un fond neutre.
 
-Vert bouteille très sombre comme sol, blanc cassé légèrement teinté vers ce même
-vert pour le texte, ambre de signalisation pour les repères actifs et le focus.
-Chaque projet porte en plus sa propre teinte, qui ne sert qu'à colorer le halo du
-fond et son panneau d'attente.
+**Clair (défaut)** : le lagon. L'eau transparente d'un archipel du Pacifique vue
+de près. Turquoise très clair au centre, qui se creuse vers un bleu plus profond
+sur les bords, comme un haut-fond qui plonge. Encre bleu-nuit.
+
+**Sombre** : la carte marine de nuit. Vert bouteille très sombre, blanc cassé
+teinté vers ce même vert. C'est le mode qui fera le mieux ressortir les visuels.
+
+Dans les deux cas, l'accent est un **ambre de balisage**, simplement ramené à un
+niveau qui tient sur une eau claire en mode clair. Il ne sert qu'aux repères
+actifs et au focus.
+
+Chaque projet porte en plus sa propre teinte, qui ne colore que deux choses : le
+halo du fond et son panneau d'attente.
+
+Le bouton de bascule est le même que dans todo et citations-livres, au même coin,
+avec la même convention (`body.dark`, clé `archipel_theme`, clair par défaut).
 
 ## Typographie
 

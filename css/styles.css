@@ -5,21 +5,56 @@
 
 /* --- Jetons ---------------------------------------------------------------- */
 
+/* ---------------------------------------------------------------------------
+   DEUX ÉTATS DE MARÉE.
+
+   Défaut = clair, et le sombre s'obtient par la classe `body.dark`, exactement
+   comme les projets todo et citations-livres. Même bouton, même coin, même clé
+   de stockage en `<projet>_theme`.
+
+   Clair  : lagon. L'eau transparente d'un archipel du Pacifique vue de près,
+            fond bleu très pâle, encre bleu-nuit, signal ambre brûlé.
+   Sombre : carte marine de nuit. Vert bouteille profond, signal ambre de
+            balisage. C'est le mode qui fera le mieux ressortir les visuels.
+
+   Les jetons dépendant du thème sont TOUS ici et dans le bloc `body.dark`.
+   Les valeurs composées avec une teinte variable (halo du fond, panneau
+   d'attente) sont stockées en nombres nus : elles se recomposent là où la
+   teinte existe vraiment, sur `<body>` pour le halo et sur `.card` pour le
+   panneau.
+   --------------------------------------------------------------------------- */
+
 :root {
-  /* Sol : vert bouteille très sombre. Les images sont la seule source de
-     lumière de la page, le reste recule. */
-  --ground:       oklch(0.185 0.026 168);
-  --ground-deep:  oklch(0.128 0.022 168);
-  --surface:      oklch(0.245 0.028 168);
-  --line:         oklch(0.315 0.026 168);
+  /* Le fond est le haut-fond turquoise, la vignette des bords est l'eau qui
+     se creuse en s'éloignant. */
+  --ground:       oklch(0.935 0.055 198);
+  --ground-deep:  oklch(0.850 0.088 202);
+  --surface:      oklch(0.995 0.010 198);
+  --line:         oklch(0.700 0.055 202);
+  --chip:         oklch(0.995 0.010 198 / 0.82);
 
-  /* Encres : blanc cassé teinté vers le vert du sol, jamais vers le chaud. */
-  --ink:          oklch(0.960 0.008 168);
-  --ink-soft:     oklch(0.800 0.014 168);   /*  8.1:1 sur le sol */
-  --ink-muted:    oklch(0.680 0.016 168);   /*  5.6:1 sur le sol */
+  --ink:          oklch(0.320 0.050 220);
+  --ink-soft:     oklch(0.420 0.045 220);
+  --ink-muted:    oklch(0.470 0.042 220);
 
-  /* Signal : ambre de balisage. Repère actif, focus, rien d'autre. */
-  --signal:       oklch(0.800 0.145 72);
+  /* Ambre brûlé : le même repère que dans la nuit, ramené à un niveau qui
+     tient sur une eau claire. */
+  --signal:       oklch(0.560 0.155 48);
+
+  /* Halo de l'île active : un fond de lagon qui prend la couleur de l'île. */
+  --halo-l: 0.815;  --halo-c: 0.105;  --halo-a: 0.62;
+
+  /* Panneau d'attente de la carte, tant qu'il n'y a pas de visuel. */
+  --art-l1: 0.780;  --art-c1: 0.100;
+  --art-l2: 0.585;  --art-c2: 0.090;
+  --art-ink-l: 0.165;
+
+  --shadow:    0 22px 44px -22px oklch(0.45 0.07 215 / 0.55);
+  --shadow-hi: 0 26px 56px -20px oklch(0.45 0.07 215 / 0.60);
+
+  /* Encre du bandeau « Ouvrir », posé sur un voile sombre dans les deux
+     modes puisqu'il recouvre une image. Ne bascule donc pas. */
+  --on-scrim:  oklch(0.970 0.006 205);
 
   --font-display: "Instrument Serif", Georgia, serif;
   --font-sans:    "IBM Plex Sans", system-ui, sans-serif;
@@ -30,7 +65,7 @@
      disponible (h = w x 1.25, donc w max = 48svh x 0.8). Un portable 13 pouces
      et un 27 pouces donnent ainsi la même composition, sans palier ni
      déformation du portrait 4:5. */
-  --card-w: min(clamp(200px, 23vw, 360px), calc(48svh * 0.8));
+  --card-w: min(clamp(200px, 23vw, 360px), calc(45svh * 0.8));
   --card-h: calc(var(--card-w) * 1.25);
   --radius: 14px;
 
@@ -44,6 +79,30 @@
   --z-card: 10;
   --z-arrow: 40;
   --z-skip: 90;
+}
+
+/* Mode sombre : carte marine de nuit. Ne redéfinit que ce qui change. */
+body.dark {
+  --ground:       oklch(0.185 0.026 168);
+  --ground-deep:  oklch(0.128 0.022 168);
+  --surface:      oklch(0.245 0.028 168);
+  --line:         oklch(0.315 0.026 168);
+  --chip:         oklch(0.245 0.028 168 / 0.72);
+
+  --ink:          oklch(0.960 0.008 168);
+  --ink-soft:     oklch(0.800 0.014 168);
+  --ink-muted:    oklch(0.680 0.016 168);
+
+  --signal:       oklch(0.800 0.145 72);
+
+  --halo-l: 0.420;  --halo-c: 0.075;  --halo-a: 0.50;
+
+  --art-l1: 0.480;  --art-c1: 0.085;
+  --art-l2: 0.300;  --art-c2: 0.055;
+  --art-ink-l: 0.970;
+
+  --shadow:    0 24px 48px -20px oklch(0.09 0.02 168 / 0.90);
+  --shadow-hi: 0 28px 60px -18px oklch(0.09 0.02 168 / 0.95);
 }
 
 /* Teinte de l'île active. Déclarée en @property pour être animable : le halo
@@ -84,7 +143,8 @@ body::before {
   pointer-events: none;
   background:
     radial-gradient(58% 46% at 50% 38%,
-      oklch(0.42 0.075 var(--isle-h) / 0.5), transparent 68%),
+      oklch(var(--halo-l) var(--halo-c) var(--isle-h) / var(--halo-a)),
+      transparent 68%),
     radial-gradient(120% 90% at 50% 50%,
       transparent 45%, var(--ground-deep) 100%);
 }
@@ -116,12 +176,37 @@ body > * { position: relative; z-index: var(--z-card); }
 
 .masthead {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   gap: 16px;
   font-family: var(--font-mono);
   font-size: 0.78rem;
 }
+
+.masthead__right {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 1.2vw, 16px);
+}
+
+/* Même bouton rond que dans todo et citations-livres, même coin. */
+.icon-btn {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background var(--dur-fade) var(--ease),
+              border-color var(--dur-fade) var(--ease);
+}
+.icon-btn:hover { border-color: var(--signal); }
 
 .wordmark {
   color: var(--ink-soft);
@@ -165,7 +250,7 @@ body > * { position: relative; z-index: var(--z-card); }
   padding: 0;
   border: 0;
   border-radius: 50%;
-  background: oklch(0.245 0.028 168 / 0.72);
+  background: var(--chip);
   color: var(--ink-soft);
   cursor: pointer;
   opacity: 0;
@@ -198,7 +283,7 @@ body > * { position: relative; z-index: var(--z-card); }
   opacity: var(--o, 1);
   filter: blur(var(--blur, 0px));
   z-index: var(--z, 1);
-  box-shadow: 0 24px 48px -20px oklch(0.09 0.02 168 / 0.9);
+  box-shadow: var(--shadow);
   transition: transform var(--dur-move) var(--ease),
               opacity var(--dur-move) var(--ease),
               filter var(--dur-move) var(--ease),
@@ -213,8 +298,7 @@ body:not(.is-ready) .card { transition: none; }
 
 .card.is-active:hover,
 .card.is-active:focus-visible {
-  box-shadow: 0 28px 60px -18px oklch(0.09 0.02 168 / 0.95),
-              0 0 0 2px oklch(0.80 0.145 72 / 0.55);
+  box-shadow: var(--shadow-hi), 0 0 0 2px var(--signal);
 }
 
 .card__art {
@@ -225,7 +309,8 @@ body:not(.is-ready) .card { transition: none; }
   padding: 12%;
   background:
     radial-gradient(90% 70% at 50% 22%,
-      oklch(0.48 0.085 var(--hue)), oklch(0.30 0.055 var(--hue)));
+      oklch(var(--art-l1) var(--art-c1) var(--hue)),
+      oklch(var(--art-l2) var(--art-c2) var(--hue)));
 }
 
 .card__art img {
@@ -244,7 +329,7 @@ body:not(.is-ready) .card { transition: none; }
   line-height: 1.15;
   text-align: center;
   text-wrap: balance;
-  color: oklch(0.97 0.01 var(--hue));
+  color: oklch(var(--art-ink-l) 0.04 var(--hue));
 }
 
 /* « Ouvrir », uniquement sur l'île nette et seulement quand on la vise. */
@@ -253,7 +338,7 @@ body:not(.is-ready) .card { transition: none; }
   inset: auto 0 0 0;
   padding: 40px 16px 14px;
   background: linear-gradient(transparent, oklch(0.12 0.02 168 / 0.88));
-  color: var(--ink);
+  color: var(--on-scrim);
   font-family: var(--font-mono);
   font-size: 0.78rem;
   letter-spacing: 0.08em;

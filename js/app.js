@@ -25,6 +25,29 @@ const els = {
 
 const N = PROJECTS.length;
 
+/* --- Thème ------------------------------------------------------------------
+   Même convention que todo et citations-livres : classe `dark` sur <body>,
+   clé `<projet>_theme` dans localStorage, clair par défaut, 🌙 pour aller vers
+   le sombre et ☀️ pour en revenir. La classe a déjà pu être posée par le petit
+   script en tête de <body>, on ne fait ici que la confirmer et l'entretenir. */
+
+const THEME_KEY = "archipel_theme";
+const THEME_COLOR = { light: "#bff6f7", dark: "#061610" };
+const themeToggle = $("themeToggle");
+
+function setTheme(dark) {
+  document.body.classList.toggle("dark", dark);
+  themeToggle.textContent = dark ? "☀️" : "🌙";
+  themeToggle.title = dark ? "Passer en mode clair" : "Passer en mode sombre";
+  $("themeColor").content = dark ? THEME_COLOR.dark : THEME_COLOR.light;
+  localStorage.setItem(THEME_KEY, dark ? "dark" : "light");
+}
+
+setTheme(localStorage.getItem(THEME_KEY) === "dark");
+themeToggle.addEventListener("click", () =>
+  setTheme(!document.body.classList.contains("dark"))
+);
+
 /* Décalage horizontal (en multiples de la largeur de carte), échelle, opacité
    et flou par niveau d'éloignement. Le décalage est volontairement inférieur à
    une largeur pleine : les voisines dépassent de derrière l'île nette au lieu

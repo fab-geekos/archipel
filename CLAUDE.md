@@ -30,6 +30,22 @@ volontairement : les voisines dépassent **de derrière** l'île nette.
 `maxVisible` (0, 1 ou 2 voisines par côté) dépend de la largeur de fenêtre et
 est recalculé au redimensionnement.
 
+### Les thèmes
+
+`:root` porte le mode **clair** (le défaut), `body.dark` ne redéfinit que ce qui
+change. Tous les jetons dépendant du thème sont dans ces deux blocs, nulle part
+ailleurs.
+
+⚠️ Les valeurs composées avec une teinte variable (halo du fond, panneau
+d'attente) sont stockées en **nombres nus** (`--halo-l`, `--art-l1`, ...) et
+recomposées dans la règle qui les utilise. Un jeton du genre
+`--halo: oklch(0.42 0.075 var(--isle-h))` déclaré sur `:root` serait invalide :
+la substitution a lieu sur l'élément qui déclare, et `--isle-h` n'y existe pas.
+
+Un court script en tête de `<body>` pose la classe `dark` **avant le premier
+rendu** : `app.js` est un module, donc différé, et la page aurait clignoté en
+clair avant de basculer. La clé y est répétée en dur, c'est assumé.
+
 ### Le halo
 
 `--isle-h` est déclarée en `@property` pour être **animable**. `renderReadout`
@@ -55,6 +71,11 @@ qui reste correct.
 7. **Nom du projet affiché sous le carrousel, pas sur la carte.** L'image doit
    rester pleine. Le nom sur la carte n'apparaît que dans le panneau d'attente,
    tant qu'il n'y a pas d'image.
+8. **Deux thèmes, convention maison.** Classe `dark` sur `<body>`, clé
+   `archipel_theme` dans localStorage, **clair par défaut**, bouton rond
+   `.icon-btn` en haut à droite, 🌙 vers le sombre et ☀️ pour en revenir. C'est
+   exactement ce que font todo et citations-livres, demande explicite de Fabien.
+   Pour inverser le défaut, il suffit de changer la comparaison dans `setTheme`.
 
 ## Avancement
 

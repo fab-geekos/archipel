@@ -60,14 +60,22 @@
   --font-sans:    "IBM Plex Sans", system-ui, sans-serif;
   --font-mono:    "IBM Plex Mono", ui-monospace, monospace;
 
-  /* Taille SOUHAITÉE de la carte, à partir de la largeur d'écran. La taille
-     réelle est plafonnée par la hauteur que la scène a vraiment (cf. `.card`),
-     et non par une fraction de fenêtre : les textes du bas occupent une place
-     fixe, donc une fenêtre courte laisse beaucoup moins de place qu'un simple
-     pourcentage ne le laisse croire. Le portrait 4:5 est tenu par
-     `aspect-ratio`, il ne se déforme jamais. */
-  --card-w: clamp(220px, 31vw, 500px);
-  --card-h: calc(var(--card-w) * 1.25);
+  /* FORMAT DES VISUELS. Seul endroit à changer si les images ne sont pas
+     carrées : 4/3 pour du paysage, 4/5 pour du portrait. Tout le reste suit,
+     et `aspect-ratio` garantit qu'aucune image ne se déforme jamais. */
+  --card-ar-w: 1;
+  --card-ar-h: 1;
+
+  /* Taille SOUHAITÉE de la carte, à partir de la largeur d'écran. Le plafond
+     n'est pas arbitraire : au-delà, la voisine la plus éloignée sort du cadre
+     et se fait couper net au bord au lieu de s'effacer. Il va de pair avec les
+     décalages de `LEVELS` dans app.js et avec le nombre de voisines affichées.
+     La taille RÉELLE est en plus plafonnée par la hauteur que la scène a
+     vraiment (cf. `.card`), et non par une fraction de fenêtre : les textes du
+     bas occupent une hauteur fixe, donc une fenêtre courte laisse beaucoup
+     moins de place qu'un simple pourcentage ne le laisse croire. */
+  --card-w: clamp(240px, 40vw, 700px);
+  --card-h: calc(var(--card-w) * var(--card-ar-h) / var(--card-ar-w));
   --radius: 14px;
 
   /* Sorties exponentielles, sans rebond. */
@@ -266,10 +274,10 @@ body > * { position: relative; z-index: var(--z-card); }
   top: 50%;
   left: 50%;
   /* La hauteur voulue, sauf si la scène est plus courte : alors c'est elle qui
-     commande. La largeur suit toujours, le 4:5 est intouchable. */
+     commande. La largeur suit toujours, le format est intouchable. */
   height: min(var(--card-h), 100%);
   width: auto;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: var(--card-ar-w) / var(--card-ar-h);
   border-radius: var(--radius);
   overflow: hidden;
   text-decoration: none;
@@ -410,7 +418,7 @@ body:not(.is-ready) .card { transition: none; }
 /* --- Réglages d'écran -------------------------------------------------------- */
 
 @media (max-width: 720px) {
-  :root { --card-w: clamp(200px, 56vw, 300px); }
+  :root { --card-w: clamp(200px, 66vw, 360px); }
   .arrow { opacity: 1; }              /* pas de survol au doigt */
   .hint { display: none; }            /* pas de clavier non plus */
 }

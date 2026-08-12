@@ -53,8 +53,8 @@ themeToggle.addEventListener("click", () =>
    de s'aligner à côté d'elle. */
 const LEVELS = [
   { x: 0.00, s: 1.00, o: 1.00, blur: 0.0 },
-  { x: 0.60, s: 0.82, o: 0.55, blur: 1.6 },
-  { x: 1.02, s: 0.68, o: 0.26, blur: 3.2 },
+  { x: 0.56, s: 0.82, o: 0.55, blur: 1.6 },
+  { x: 0.94, s: 0.68, o: 0.26, blur: 3.2 },
 ];
 
 const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
@@ -175,10 +175,9 @@ function renderReadout(animate) {
 
   if (animate && !reduceMotion.matches) {
     readout.animate(
-      [
-        { opacity: 0, transform: "translateY(10px)" },
-        { opacity: 1, transform: "none" },
-      ],
+      /* Fondu seul, aucun déplacement : le texte ne doit jamais bouger
+         verticalement d'une île à l'autre. */
+      [{ opacity: 0 }, { opacity: 1 }],
       { duration: 420, easing: "cubic-bezier(0.22, 1, 0.36, 1)" }
     );
   }
@@ -195,11 +194,40 @@ const prev = () => goTo(active - 1);
 
 /* --- Adaptation à l'écran --------------------------------------------------- */
 
-/* Combien de voisines de chaque côté l'écran peut accueillir sans que l'île
-   nette ne se retrouve à l'étroit. */
+/* Fige la hauteur du bloc de texte sur le plus haut des projets.
+   Sans ça, une description de deux lignes au lieu de trois raccourcit le bloc,
+   la scène récupère la place, et TOUT remonte d'un cran au changement d'île :
+   le texte comme la carte. On mesure donc les cinq une fois, et on retient le
+   maximum. Refait à chaque redimensionnement, puisque le nombre de lignes
+   dépend de la largeur. */
+function freezeReadoutHeight() {
+  const saved = [els.tagline.textContent, els.name.textContent, els.desc.textContent];
+
+  /* La zone est une région live : sans ce silence, le lecteur d'écran
+     annoncerait les cinq projets pendant la mesure. */
+  readout.setAttribute("aria-live", "off");
+  readout.style.height = "auto";
+
+  let tallest = 0;
+  for (const p of PROJECTS) {
+    els.tagline.textContent = p.tagline;
+    els.name.textContent = p.name;
+    els.desc.textContent = p.description;
+    tallest = Math.max(tallest, readout.offsetHeight);
+  }
+
+  [els.tagline.textContent, els.name.textContent, els.desc.textContent] = saved;
+  readout.style.height = `${tallest}px`;
+  readout.setAttribute("aria-live", "polite");
+}
+
+/* Combien de voisines de chaque côté l'écran peut accueillir sans rogner sur la
+   taille de l'île nette. Deux de chaque côté coûtent cher en largeur, donc on
+   les réserve aux très grands écrans : ailleurs, mieux vaut une seule voisine
+   et un visuel central nettement plus grand. */
 function updateVisibility() {
   const w = innerWidth;
-  maxVisible = w >= 1100 ? 2 : w >= 720 ? 1 : 0;
+  maxVisible = w >= 1600 ? 2 : w >= 760 ? 1 : 0;
 }
 
 /* Volontairement un minuteur et non requestAnimationFrame : rAF ne s'exécute
@@ -210,6 +238,7 @@ addEventListener("resize", () => {
   clearTimeout(resizeTimer);
   resizeTimer = setTimeout(() => {
     updateVisibility();
+    freezeReadoutHeight();   /* d'abord : il décide de la hauteur de la scène */
     layout();
   }, 90);
 });
@@ -277,6 +306,8 @@ dotsEl.append(...dots);
 
 updateVisibility();
 goTo(0, { animate: false });
+freezeReadoutHeight();
+layout();   /* la scène a sa hauteur définitive, les cartes se replacent dedans */
 
 /* Les cartes sont placées sans transition au premier rendu, sinon elles
    glissent toutes depuis le centre au chargement. On force le calcul de mise
@@ -284,3 +315,10 @@ goTo(0, { animate: false });
    qui ne viendra pas si la page s'ouvre dans un onglet en arrière-plan. */
 void document.body.offsetWidth;
 document.body.classList.add("is-ready");
+
+/* Les polices web changent le nombre de lignes des descriptions : on remesure
+   une fois posées, sinon la hauteur figée l'aurait été sur la police de repli. */
+document.fonts?.ready.then(() => {
+  freezeReadoutHeight();
+  layout();
+});

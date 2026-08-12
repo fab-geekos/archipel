@@ -32,8 +32,20 @@ Déposer le fichier dans `images/`, puis renseigner `image` dans `projects.js`.
 Tant que `image` vaut `null`, la carte affiche un panneau coloré avec le nom du
 projet.
 
-Format attendu : **portrait 4:5** (par exemple 1000 × 1250), en `.webp` de
-préférence, autour de 200 Ko par image.
+Format attendu : **carré** (1200 × 1200 par exemple), en `.webp` de préférence,
+autour de 200 Ko par image. C'est aussi le format que sortent par défaut ImageFX
+et Leonardo.
+
+Pour changer de format, une seule chose à modifier, en haut de
+[`css/styles.css`](css/styles.css) :
+
+```css
+--card-ar-w: 1;   /* 4 pour du 4:3 paysage, 4 pour du 4:5 portrait */
+--card-ar-h: 1;   /* 3                      5                      */
+```
+
+Le carrousel se recompose tout seul, et `aspect-ratio` garantit qu'aucune image
+ne se déforme.
 
 ## Développement local
 

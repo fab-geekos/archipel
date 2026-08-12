@@ -29,6 +29,19 @@ laisse bien moins de place qu'un pourcentage ne le suggère. Vérifié jusqu'à
 1280x450, où la carte se réduit mais où rien n'est coupé. Le portrait 4:5 est
 tenu par `aspect-ratio`, la largeur suit toujours la hauteur.
 
+### Les hauteurs sont figées, pas fluides
+
+`freezeReadoutHeight()` mesure les descriptions des cinq projets et fige la
+hauteur du bloc de texte sur **le plus haut**. Sans ça, une description de deux
+lignes au lieu de trois raccourcit le bloc, la scène récupère la place, et tout
+remonte d'un cran au changement d'île. Refait à chaque redimensionnement (le
+nombre de lignes dépend de la largeur) et une fois les polices web posées (elles
+changent le nombre de lignes). La région live est mise en sourdine pendant la
+mesure, sinon un lecteur d'écran annoncerait les cinq projets.
+
+Pour la même raison, la transition du texte est un **fondu seul**, sans aucun
+déplacement vertical. Demande explicite de Fabien.
+
 ### Le carrousel
 
 Les cartes ne changent **jamais** de place dans le DOM. À chaque déplacement,

@@ -1,0 +1,19 @@
+# Outillage local Claude Code (ne pas publier sur GitHub)
+.claude/
+
+# Secrets : NE JAMAIS COMMITTER
+serviceAccountKey.json
+*serviceAccount*.json
+.env
+.env.*
+jeton*
+*token*.txt
+*.pem
+*.key
+
+# Dependances / OS / editeurs
+node_modules/
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

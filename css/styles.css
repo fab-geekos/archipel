@@ -1,0 +1,371 @@
+/* =============================================================================
+   ARCHIPEL — feuille de style unique.
+   Ordre : jetons · base · masthead · scène · cartes · lecture · pied · réglages
+   ========================================================================== */
+
+/* --- Jetons ---------------------------------------------------------------- */
+
+:root {
+  /* Sol : vert bouteille très sombre. Les images sont la seule source de
+     lumière de la page, le reste recule. */
+  --ground:       oklch(0.185 0.026 168);
+  --ground-deep:  oklch(0.128 0.022 168);
+  --surface:      oklch(0.245 0.028 168);
+  --line:         oklch(0.315 0.026 168);
+
+  /* Encres : blanc cassé teinté vers le vert du sol, jamais vers le chaud. */
+  --ink:          oklch(0.960 0.008 168);
+  --ink-soft:     oklch(0.800 0.014 168);   /*  8.1:1 sur le sol */
+  --ink-muted:    oklch(0.680 0.016 168);   /*  5.6:1 sur le sol */
+
+  /* Signal : ambre de balisage. Repère actif, focus, rien d'autre. */
+  --signal:       oklch(0.800 0.145 72);
+
+  --font-display: "Instrument Serif", Georgia, serif;
+  --font-sans:    "IBM Plex Sans", system-ui, sans-serif;
+  --font-mono:    "IBM Plex Mono", ui-monospace, monospace;
+
+  /* Géométrie de la carte. Tout le carrousel se dimensionne à partir d'ici.
+     La largeur suit celle de l'écran, mais reste plafonnée par la HAUTEUR
+     disponible (h = w x 1.25, donc w max = 48svh x 0.8). Un portable 13 pouces
+     et un 27 pouces donnent ainsi la même composition, sans palier ni
+     déformation du portrait 4:5. */
+  --card-w: min(clamp(200px, 23vw, 360px), calc(48svh * 0.8));
+  --card-h: calc(var(--card-w) * 1.25);
+  --radius: 14px;
+
+  /* Sorties exponentielles, sans rebond. */
+  --ease:      cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-move:  520ms;
+  --dur-fade:  420ms;
+
+  /* Échelle z sémantique. */
+  --z-glow: 0;
+  --z-card: 10;
+  --z-arrow: 40;
+  --z-skip: 90;
+}
+
+/* Teinte de l'île active. Déclarée en @property pour être animable : le halo
+   du fond glisse d'une couleur à l'autre au lieu de sauter. */
+@property --isle-h {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 168;
+}
+
+/* --- Base ------------------------------------------------------------------ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  --isle-h: 168;
+  margin: 0;
+  display: grid;
+  grid-template-rows: auto 1fr auto auto;
+  min-height: 100svh;
+  padding: clamp(16px, 2.4vw, 32px);
+  gap: clamp(12px, 2vh, 28px);
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: clamp(0.95rem, 0.9rem + 0.2vw, 1.0625rem);
+  line-height: 1.6;
+  transition: --isle-h var(--dur-move) var(--ease);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Halo de l'île active + assombrissement des bords. Sous tout le reste. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-glow);
+  pointer-events: none;
+  background:
+    radial-gradient(58% 46% at 50% 38%,
+      oklch(0.42 0.075 var(--isle-h) / 0.5), transparent 68%),
+    radial-gradient(120% 90% at 50% 50%,
+      transparent 45%, var(--ground-deep) 100%);
+}
+
+body > * { position: relative; z-index: var(--z-card); }
+
+/* Position fixe et non absolue : un lien d'évitement rangé à gauche du document
+   élargirait la zone défilable. */
+.skip {
+  position: fixed;
+  top: -120px;
+  left: clamp(16px, 2.4vw, 32px);
+  z-index: var(--z-skip);
+  padding: 10px 16px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+}
+.skip:focus { top: clamp(16px, 2.4vw, 32px); }
+
+:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 3px;
+}
+
+/* --- Masthead --------------------------------------------------------------- */
+
+.masthead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+}
+
+.wordmark {
+  color: var(--ink-soft);
+  letter-spacing: 0.18em;
+}
+
+.counter {
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+}
+
+/* --- Scène ------------------------------------------------------------------ */
+
+/* Sur un écran étroit, les îles en retrait sont ramenées à zéro d'opacité mais
+   restent posées hors cadre : on les coupe ici pour qu'elles n'élargissent
+   jamais la page. La marge de coupe laisse passer les ombres portées. */
+.stage {
+  display: grid;
+  place-items: center;
+  min-height: 0;
+  overflow-x: clip;   /* l'axe vertical reste visible : les ombres portées passent */
+}
+
+.ring {
+  position: relative;
+  width: 100%;
+  height: var(--card-h);
+}
+
+/* Flèches : discrètes, elles n'apparaissent qu'au survol de la scène ou au
+   focus clavier. Le geste principal reste le clic sur une île. */
+.arrow {
+  position: absolute;
+  top: 50%;
+  translate: 0 -50%;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: oklch(0.245 0.028 168 / 0.72);
+  color: var(--ink-soft);
+  cursor: pointer;
+  opacity: 0;
+  z-index: var(--z-arrow);
+  transition: opacity var(--dur-fade) var(--ease),
+              color var(--dur-fade) var(--ease);
+}
+.arrow--prev { left: clamp(4px, 1.5vw, 24px); }
+.arrow--next { right: clamp(4px, 1.5vw, 24px); }
+.arrow svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.stage:hover .arrow, .arrow:focus-visible { opacity: 1; }
+.arrow:hover { color: var(--signal); }
+
+/* --- Cartes ----------------------------------------------------------------- */
+
+.card {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: var(--card-w);
+  height: var(--card-h);
+  border-radius: var(--radius);
+  overflow: hidden;
+  text-decoration: none;
+  cursor: pointer;
+  /* --x, --s, --o, --blur, --z sont posés par app.js à chaque déplacement. */
+  transform: translate3d(calc(-50% + var(--x, 0px)), 0, 0) scale(var(--s, 1));
+  opacity: var(--o, 1);
+  filter: blur(var(--blur, 0px));
+  z-index: var(--z, 1);
+  box-shadow: 0 24px 48px -20px oklch(0.09 0.02 168 / 0.9);
+  transition: transform var(--dur-move) var(--ease),
+              opacity var(--dur-move) var(--ease),
+              filter var(--dur-move) var(--ease),
+              box-shadow var(--dur-fade) var(--ease);
+}
+
+.card[aria-hidden="true"] { pointer-events: none; }
+
+/* Premier rendu : les cartes se posent sans transition, sinon elles glissent
+   toutes depuis le centre au chargement de la page. */
+body:not(.is-ready) .card { transition: none; }
+
+.card.is-active:hover,
+.card.is-active:focus-visible {
+  box-shadow: 0 28px 60px -18px oklch(0.09 0.02 168 / 0.95),
+              0 0 0 2px oklch(0.80 0.145 72 / 0.55);
+}
+
+.card__art {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 12%;
+  background:
+    radial-gradient(90% 70% at 50% 22%,
+      oklch(0.48 0.085 var(--hue)), oklch(0.30 0.055 var(--hue)));
+}
+
+.card__art img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Panneau d'attente : le nom posé sur la teinte de l'île, en attendant le
+   visuel. Il disparaît de lui-même dès qu'une image est renseignée. */
+.card__waiting {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2.6vw, 2rem);
+  line-height: 1.15;
+  text-align: center;
+  text-wrap: balance;
+  color: oklch(0.97 0.01 var(--hue));
+}
+
+/* « Ouvrir », uniquement sur l'île nette et seulement quand on la vise. */
+.card__open {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 40px 16px 14px;
+  background: linear-gradient(transparent, oklch(0.12 0.02 168 / 0.88));
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-align: center;
+  opacity: 0;
+  transition: opacity var(--dur-fade) var(--ease);
+}
+.card.is-active:hover .card__open,
+.card.is-active:focus-visible .card__open { opacity: 1; }
+
+/* --- Lecture ---------------------------------------------------------------- */
+
+.readout {
+  max-width: 62ch;
+  margin-inline: auto;
+  text-align: center;
+}
+
+/* Volontairement peu espacée et en casse normale : c'est le sous-titre du
+   projet, pas un intitulé de section. */
+.readout__tagline {
+  margin: 0 0 6px;
+  color: var(--ink-muted);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+}
+
+.readout__name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 1.4rem + 2.8vw, 3.5rem);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.readout__desc {
+  margin: 10px auto 0;
+  max-width: 58ch;
+  color: var(--ink-soft);
+  text-wrap: pretty;
+}
+
+.readout__host {
+  margin: 10px 0 0;
+  color: var(--ink-muted);
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+}
+
+/* --- Pied ------------------------------------------------------------------- */
+
+.footer {
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+}
+
+.dots {
+  display: flex;
+  gap: 8px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 99px;
+  background: var(--line);
+  cursor: pointer;
+  transition: width var(--dur-move) var(--ease),
+              background var(--dur-move) var(--ease);
+}
+.dot:hover { background: var(--ink-muted); }
+.dot[aria-current="true"] { width: 26px; background: var(--signal); }
+
+.hint {
+  margin: 0;
+  color: var(--ink-muted);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+}
+.hint kbd {
+  display: inline-block;
+  min-width: 1.4em;
+  margin-right: 3px;
+  padding: 2px 5px;
+  border-radius: 5px;
+  background: var(--surface);
+  color: var(--ink-soft);
+  font: inherit;
+  text-align: center;
+}
+.hint__sep { margin: 0 8px; }
+
+/* --- Réglages d'écran -------------------------------------------------------- */
+
+@media (max-width: 720px) {
+  :root { --card-w: min(clamp(200px, 56vw, 300px), calc(44svh * 0.8)); }
+  .arrow { opacity: 1; }              /* pas de survol au doigt */
+  .hint { display: none; }            /* pas de clavier non plus */
+}
+
+/* --- Mouvement réduit --------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 1ms !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

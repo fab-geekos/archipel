@@ -1,6 +1,6 @@
 # Archipel — mémoire du projet
 
-Page d'accueil personnelle de Fabien. Un favori unique qui remplace cinq favoris.
+Page d'accueil personnelle de Fabien. Un favori unique qui remplace tous les autres.
 Voir [PRODUCT.md](PRODUCT.md) pour la vision et la direction artistique.
 
 ## Architecture
@@ -37,7 +37,7 @@ plus courte raccourcit le bloc, la scène récupère la place, et tout remonte d
 cran au changement d'île.
 
 ⚠️ **Réservé en CSS, surtout pas mesuré en JS.** Une version précédente
-mesurait les cinq descriptions et figeait la hauteur sur la plus haute. Défaut
+mesurait toutes les descriptions et figeait la hauteur sur la plus haute. Défaut
 de fond : une mesure dépend de l'état de mise en page au moment où elle est
 prise. Prise pendant une largeur transitoire du chargement, elle figeait le bloc
 à 1271 px, ce qui écrasait la scène à 0 et rendait les cartes invisibles, **sans
@@ -59,7 +59,7 @@ est débouncée et idempotente, être appelée deux fois ne coûte rien.
 
 Les cartes ne changent **jamais** de place dans le DOM. À chaque déplacement,
 `layout()` calcule pour chacune sa distance signée la plus courte sur l'anneau
-(`ringDistance`, valeurs -2 à 2 pour cinq îles) et pose quatre variables CSS :
+(`ringDistance`, -2 à 2 pour cinq îles, -3 à 2 pour six) et pose quatre variables CSS :
 `--x`, `--s`, `--o`, `--blur`, plus `--z`. C'est ce qui rend la boucle
 invisible : il n'y a pas de bord, donc jamais de saut à rattraper, et aucun
 clonage d'élément.
@@ -132,7 +132,7 @@ qui reste correct.
 
 - Fait : structure, carrousel bouclé, clavier, molette, glissement, points,
   flèches, halo par île, panneaux d'attente, adaptation écran, mouvement réduit.
-- Reste : **les images**. Cinq visuels portrait 4:5 dans `images/`, puis
+- Reste : **les images**. Un visuel portrait 4:5 par île dans `images/`, puis
   renseigner `image` dans `projects.js`. La DA n'est pas encore arrêtée ;
   méthode retenue : explorer sur Google ImageFX, puis produire la série sur
   Leonardo.ai en donnant la première image validée comme référence de style.

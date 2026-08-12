@@ -3,7 +3,7 @@
 
    Principe : les cartes ne bougent jamais dans le DOM. À chaque déplacement on
    recalcule, pour chacune, sa distance signée la plus courte sur l'anneau
-   (d = -2..2 pour cinq îles) et on pose sa position, son échelle, son opacité
+   (d = -2..2 pour cinq îles, -3..2 pour six) et on pose sa position, son échelle, son opacité
    et son flou. C'est ce qui rend la boucle invisible : il n'y a pas de bord
    dont on pourrait s'approcher, donc jamais de saut à rattraper.
    ========================================================================== */
@@ -137,7 +137,8 @@ function buildDot(p, i) {
 /* --- Placement ------------------------------------------------------------- */
 
 /* Distance signée la plus courte entre i et l'île active, sur l'anneau.
-   Pour N=5 : -2, -1, 0, 1, 2. */
+   Pour N=5 : -2..2. Pour N=6 : -3..2. LEVELS est indexé avec un
+   Math.min, donc |d| > 2 retombe sur le niveau le plus lointain. */
 function ringDistance(i) {
   return ((i - active + N + Math.floor(N / 2)) % N) - Math.floor(N / 2);
 }

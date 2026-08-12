@@ -72,4 +72,14 @@ export const PROJECTS = [
     hue: 168,
     image: null,
   },
+  {
+    id: "vocabulaire",
+    name: "Vocabulaire anglais",
+    tagline: "Mots et expressions",
+    description:
+      "Le carnet de vocabulaire anglais, révisé par répétition espacée dans les deux sens. Correction tolérante à la frappe, tous les sens affichés, pièges de prononciation notés.",
+    url: "https://voc-anglais-f5973.web.app",
+    hue: 123,
+    image: null,
+  },
 ];

@@ -14,6 +14,21 @@ Quatre fichiers, aucune dépendance, aucun build.
 | `js/projects.js` | **la donnée**. Le seul fichier à toucher pour ajouter une île. |
 | `js/app.js` | le carrousel. |
 
+### La page ne défile jamais
+
+`<body>` fait exactement `100svh` avec `overflow: hidden` : la molette est
+réservée au changement d'île, il n'y a rien à faire défiler. Demande explicite
+de Fabien.
+
+⚠️ Conséquence : ce qui dépasse est **coupé sans recours**, l'utilisateur ne peut
+pas récupérer le contenu en défilant. C'est pour ça que la carte est
+dimensionnée par la place que la scène a **vraiment** (`height: min(var(--card-h),
+100%)` sur `.card`, `.ring` en `height: 100%`) et non par une fraction de
+fenêtre : les textes du bas occupent une hauteur fixe, donc une fenêtre courte
+laisse bien moins de place qu'un pourcentage ne le suggère. Vérifié jusqu'à
+1280x450, où la carte se réduit mais où rien n'est coupé. Le portrait 4:5 est
+tenu par `aspect-ratio`, la largeur suit toujours la hauteur.
+
 ### Le carrousel
 
 Les cartes ne changent **jamais** de place dans le DOM. À chaque déplacement,
@@ -71,6 +86,9 @@ qui reste correct.
 7. **Nom du projet affiché sous le carrousel, pas sur la carte.** L'image doit
    rester pleine. Le nom sur la carte n'apparaît que dans le panneau d'attente,
    tant qu'il n'y a pas d'image.
+   **Retirés à la demande de Fabien (ne pas les remettre) :** la signature
+   « archipel » en haut à gauche, l'aide clavier du bas, et l'adresse du projet
+   sous la description. Il reste le compteur, le bouton de thème et les points.
 8. **Deux thèmes, convention maison.** Classe `dark` sur `<body>`, clé
    `archipel_theme` dans localStorage, **clair par défaut**, bouton rond
    `.icon-btn` en haut à droite, 🌙 vers le sombre et ☀️ pour en revenir. C'est

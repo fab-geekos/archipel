@@ -19,7 +19,6 @@ const els = {
   tagline: $("tagline"),
   name: $("name"),
   desc: $("desc"),
-  host: $("host"),
   counter: $("counter"),
 };
 
@@ -169,7 +168,6 @@ function renderReadout(animate) {
   els.tagline.textContent = p.tagline;
   els.name.textContent = p.name;
   els.desc.textContent = p.description;
-  els.host.textContent = new URL(p.url).hostname;
   els.counter.textContent =
     `${String(active + 1).padStart(2, "0")} / ${String(N).padStart(2, "0")}`;
 

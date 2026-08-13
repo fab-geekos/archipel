@@ -38,8 +38,15 @@
   --ink-muted:    oklch(0.470 0.042 220);
 
   /* Ambre brûlé : le même repère que dans la nuit, ramené à un niveau qui
-     tient sur une eau claire. */
+     tient sur une eau claire. Sert au texte, aux points et au focus, donc il
+     doit passer les seuils de contraste. */
   --signal:       oklch(0.560 0.155 48);
+
+  /* Anneau de l'île centrale. Jeton séparé de `--signal` exprès : posé sur un
+     visuel et non sur le fond de page, il n'a pas les mêmes contraintes, et
+     l'ambre assombri du mode clair y virait au rouille. Ici c'est le vrai
+     ambre de balisage, juste assez dense pour se détacher d'une eau claire. */
+  --ring:         oklch(0.735 0.165 66);
 
   /* Halo de l'île active : un fond de lagon qui prend la couleur de l'île. */
   --halo-l: 0.815;  --halo-c: 0.105;  --halo-a: 0.62;
@@ -103,6 +110,7 @@ body.dark {
   --ink-muted:    oklch(0.680 0.016 168);
 
   --signal:       oklch(0.800 0.145 72);
+  --ring:         oklch(0.820 0.155 72);
 
   --halo-l: 0.420;  --halo-c: 0.075;  --halo-a: 0.50;
 
@@ -304,7 +312,7 @@ body:not(.is-ready) .card { transition: none; }
 
 .card.is-active:hover,
 .card.is-active:focus-visible {
-  box-shadow: var(--shadow-hi), 0 0 0 2px var(--signal);
+  box-shadow: var(--shadow-hi), 0 0 0 2px var(--ring);
 }
 
 .card__art {

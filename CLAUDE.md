@@ -5,7 +5,7 @@ Voir [PRODUCT.md](PRODUCT.md) pour la vision et la direction artistique.
 
 ## Architecture
 
-Quatre fichiers, aucune dépendance, aucun build.
+Quatre fichiers servis, aucune dépendance, aucun build.
 
 | Fichier | Rôle |
 |---|---|
@@ -13,6 +13,7 @@ Quatre fichiers, aucune dépendance, aucun build.
 | `css/styles.css` | jetons + mise en forme. Feuille unique. |
 | `js/projects.js` | **la donnée**. Le seul fichier à toucher pour ajouter une île. |
 | `js/app.js` | le carrousel. |
+| `outils/image.py` | hors site : prépare un visuel pour `images/`. Voir plus bas. |
 
 ### La page ne défile jamais
 
@@ -122,12 +123,28 @@ qui reste correct.
    Les descriptions ne décrivent pas, ce sont des **accroches** : « Moins de
    bruit, plus d'action. » Fabien reconnaît ses apps à leur visuel, la ligne de
    texte sert au ton, pas à l'information.
-7. **Nom du projet affiché sous le carrousel, pas sur la carte.** L'image doit
-   rester pleine. Le nom sur la carte n'apparaît que dans le panneau d'attente,
-   tant qu'il n'y a pas d'image.
+7. **Nom du projet affiché AU-DESSUS du carrousel, pas sur la carte.** L'image
+   doit rester pleine. Le nom sur la carte n'apparaît que dans le panneau
+   d'attente, tant qu'il n'y a pas d'image. Le bloc de texte était sous le
+   carrousel jusqu'à ce que Fabien demande l'inverse : on lit le nom, puis on
+   regarde l'île. L'ordre du DOM suit l'ordre visuel, rien n'est réordonné en
+   CSS.
    **Retirés à la demande de Fabien (ne pas les remettre) :** la signature
    « archipel » en haut à gauche, l'aide clavier du bas, et l'adresse du projet
    sous la description. Il reste le compteur, le bouton de thème et les points.
+
+9. **Le visuel central doit dominer la page**, demande explicite et répétée de
+   Fabien. C'est le curseur à privilégier quand un arbitrage se présente. Deux
+   conséquences déjà actées :
+   - **Le bandeau du haut est hors flux** (`position: fixed`). Il ne portait que
+     du chrome, il ne prend plus de rangée. C'est le plus gros gain de hauteur
+     obtenu, et en paysage la hauteur vaut 1.78 fois sa valeur en largeur
+     d'image. En contrepartie il survole le bloc de texte : c'est `.readout` qui
+     garde ses distances, avec une réserve latérale dans son `max-width`.
+   - **Pas de liseré ambre autour de l'île nette.** Retiré à la demande de
+     Fabien : un cadre coloré se bat avec les couleurs du visuel. Le survol ne
+     fait plus que creuser l'ombre. Le contour de `:focus-visible` reste, lui,
+     il ne se montre qu'au clavier.
 8. **Deux thèmes, convention maison.** Classe `dark` sur `<body>`, clé
    `archipel_theme` dans localStorage, **clair par défaut**, bouton rond
    `.icon-btn` en haut à droite, 🌙 vers le sombre et ☀️ pour en revenir. C'est

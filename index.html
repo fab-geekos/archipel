@@ -29,6 +29,16 @@
             aria-label="Changer de thème" title="Mode clair / sombre">🌙</button>
   </header>
 
+  <!-- Le bloc de texte est AVANT la scène : le nom du projet se lit au-dessus
+       de son visuel. L'ordre du DOM suit l'ordre visuel, rien n'est réordonné
+       en CSS, donc la lecture au clavier et au lecteur d'écran reste la même
+       que celle de l'oeil. -->
+  <section class="readout" id="readout" aria-live="polite">
+    <p class="readout__tagline" id="tagline"></p>
+    <h1 class="readout__name" id="name"></h1>
+    <p class="readout__desc" id="desc"></p>
+  </section>
+
   <main class="stage">
     <div class="ring" id="ring" role="group" aria-roledescription="carrousel" aria-label="Projets"></div>
 
@@ -39,12 +49,6 @@
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 5 7 7-7 7"/></svg>
     </button>
   </main>
-
-  <section class="readout" id="readout" aria-live="polite">
-    <p class="readout__tagline" id="tagline"></p>
-    <h1 class="readout__name" id="name"></h1>
-    <p class="readout__desc" id="desc"></p>
-  </section>
 
   <footer class="footer">
     <div class="dots" id="dots" role="group" aria-label="Choisir un projet"></div>

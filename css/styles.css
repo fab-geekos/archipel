@@ -42,12 +42,6 @@
      doit passer les seuils de contraste. */
   --signal:       oklch(0.560 0.155 48);
 
-  /* Anneau de l'île centrale. Jeton séparé de `--signal` exprès : posé sur un
-     visuel et non sur le fond de page, il n'a pas les mêmes contraintes, et
-     l'ambre assombri du mode clair y virait au rouille. Ici c'est le vrai
-     ambre de balisage, juste assez dense pour se détacher d'une eau claire. */
-  --ring:         oklch(0.735 0.165 66);
-
   /* Halo de l'île active : un fond de lagon qui prend la couleur de l'île. */
   --halo-l: 0.815;  --halo-c: 0.105;  --halo-a: 0.62;
 
@@ -82,8 +76,9 @@
      reprend la main que sur les fenêtres courtes et larges. C'est pour ça qu'il
      peut être aussi généreux sans faire déborder quoi que ce soit.
      Corollaire : pour agrandir les visuels, on gagne de la HAUTEUR (padding,
-     gap, bloc de texte), pas de la largeur. */
-  --card-w: clamp(280px, 74vw, 1480px);
+     gap, bloc de texte), pas de la largeur. Ce jeton doit seulement rester
+     assez haut pour ne pas brider la hauteur ainsi récupérée. */
+  --card-w: clamp(280px, 90vw, 2000px);
   --card-h: calc(var(--card-w) * var(--card-ar-h) / var(--card-ar-w));
   --radius: 14px;
 
@@ -112,7 +107,6 @@ body.dark {
   --ink-muted:    oklch(0.680 0.016 168);
 
   --signal:       oklch(0.800 0.145 72);
-  --ring:         oklch(0.820 0.155 72);
 
   --halo-l: 0.420;  --halo-c: 0.075;  --halo-a: 0.50;
 
@@ -140,7 +134,9 @@ body {
   --isle-h: 168;
   margin: 0;
   display: grid;
-  grid-template-rows: auto 1fr auto auto;
+  /* Trois rangées seulement : texte, scène, points. Le bandeau du haut est
+     sorti du flux (cf. `.masthead`), il n'occupe plus de rangée. */
+  grid-template-rows: auto 1fr auto;
   /* La page occupe exactement l'écran et ne défile jamais : la molette est
      réservée au changement d'île. La carte étant déjà plafonnée à 45% de la
      hauteur, tout tient sans être coupé. */
@@ -149,8 +145,8 @@ body {
   overscroll-behavior: none;
   /* Marges et gouttières serrées à dessein : en format paysage, chaque pixel
      rendu ici est un pixel de visuel en plus, multiplié par 1.78 en largeur. */
-  padding: clamp(12px, 1.6vw, 22px);
-  gap: clamp(8px, 1.2vh, 18px);
+  padding: clamp(10px, 1.1vw, 14px);
+  gap: clamp(8px, 1vh, 14px);
   background: var(--ground);
   color: var(--ink);
   font-family: var(--font-sans);
@@ -200,7 +196,19 @@ body > * { position: relative; z-index: var(--z-card); }
 
 /* --- Masthead --------------------------------------------------------------- */
 
+/* SORTI DU FLUX, et c'est le plus gros gain de hauteur de la page : en rangée
+   de grille, le bandeau coûtait ses 38px plus une gouttière, soit une
+   cinquantaine de pixels rendus à la scène, et près du double en largeur de
+   visuel une fois multipliés par 1.78.
+   Il ne porte que du chrome, compteur et bouton de thème : rien qui ait besoin
+   de sa propre place, tout peut flotter dans le coin.
+   ⚠️ Il survole désormais le bloc de texte, qui est passé en tête de page.
+   C'est `.readout` qui garde ses distances, avec une réserve latérale. */
 .masthead {
+  position: fixed;
+  top: clamp(10px, 1.1vw, 14px);
+  right: clamp(10px, 1.1vw, 14px);
+  z-index: var(--z-arrow);
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -251,16 +259,18 @@ body > * { position: relative; z-index: var(--z-card); }
    dissipe. Le masque est sur `.ring` et non sur `.stage` parce que les flèches
    sont justement rangées dans les 24 premiers pixels, elles s'effaceraient
    avec les voisines.
-   Les paliers 9% et 91% ne sont pas décoratifs : l'île nette occupe au plus
-   74% de la largeur, soit de 13% à 87%, elle reste donc toujours en dehors du
-   dégradé. Remonter `--card-w` au-delà de 82vw lui mangerait les bords. */
+   ⚠️ Les paliers 2% et 98% sont liés au plafond de `--card-w`. L'île nette
+   occupe au plus 90% de la largeur, soit de 5% à 95% : il reste trois points
+   de marge de chaque côté. Remonter `--card-w` sans reculer ces paliers lui
+   mangerait les bords, et un visuel dont les coins s'effacent se voit
+   immédiatement. */
 .ring {
   position: relative;
   width: 100%;
   height: 100%;
   min-height: 0;
-  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 9%, #000 91%, transparent 100%);
-          mask-image: linear-gradient(90deg, transparent 0, #000 9%, #000 91%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 2%, #000 98%, transparent 100%);
+          mask-image: linear-gradient(90deg, transparent 0, #000 2%, #000 98%, transparent 100%);
 }
 
 /* Flèches : discrètes, elles n'apparaissent qu'au survol de la scène ou au
@@ -325,9 +335,16 @@ body > * { position: relative; z-index: var(--z-card); }
    toutes depuis le centre au chargement de la page. */
 body:not(.is-ready) .card { transition: none; }
 
+/* Au survol, l'île nette se soulève, rien de plus. Elle portait un liseré ambre
+   de 2px, retiré à la demande de Fabien : un cadre coloré autour d'un visuel
+   se bat avec ses couleurs, et il ne disait rien que la carte ne disait déjà.
+   L'ombre plus creusée suffit à marquer que l'île répond.
+   ⚠️ Le focus clavier, lui, garde son contour : c'est le `:focus-visible`
+   global plus haut, il ne s'affiche qu'à la navigation au clavier, jamais à la
+   souris. Ne pas le retirer, le clavier est un vrai chemin dans ce projet. */
 .card.is-active:hover,
 .card.is-active:focus-visible {
-  box-shadow: var(--shadow-hi), 0 0 0 2px var(--ring);
+  box-shadow: var(--shadow-hi);
 }
 
 .card__art {
@@ -380,8 +397,20 @@ body:not(.is-ready) .card { transition: none; }
 
 /* --- Lecture ---------------------------------------------------------------- */
 
+/* Le troisième terme du `min()` est une réserve, pas de la marge décorative :
+   le bandeau flotte maintenant dans le coin haut droit, à la hauteur exacte de
+   ce bloc. 170px de chaque côté couvrent le compteur, la gouttière et le
+   bouton rond, plus de quoi respirer ; le bloc étant centré, il ne peut donc
+   jamais venir buter dessous, quelle que soit la largeur de fenêtre.
+   ⚠️ Une réserve en `padding` ferait tout autre chose : `box-sizing` étant en
+   `border-box`, elle se prendrait SUR le `max-width` au lieu de s'y ajouter,
+   et sur une fenêtre moyenne il ne resterait que 400px pour écrire, de quoi
+   faire passer « Vocabulaire anglais » sur deux lignes. Or un nom qui passe à
+   deux lignes chez un seul projet fait bouger la scène à chaque changement
+   d'île, exactement ce que les hauteurs réservées empêchent.
+   Sous 720px le bandeau retourne dans le flux et la réserve saute. */
 .readout {
-  max-width: min(88ch, 84vw);
+  max-width: min(88ch, 84vw, 100vw - 340px);
   margin-inline: auto;
   text-align: center;
 }
@@ -410,11 +439,14 @@ body:not(.is-ready) .card { transition: none; }
    projets. Elles sont devenues des accroches d'une ligne, la deuxième ligne
    n'était donc plus qu'un blanc permanent, et en format paysage chaque ligne
    rendue à la scène vaut 1.78 fois sa hauteur en largeur d'image. */
+/* Corps réduit d'un cran par rapport à la version où le texte était sous le
+   carrousel : au-dessus du visuel il n'a plus à porter la page à lui seul,
+   et chaque pixel qu'il rend à la scène en vaut 1.78 en largeur d'image. */
 .readout__name {
   margin: 0;
   min-height: 1lh;
   font-family: var(--font-display);
-  font-size: clamp(2rem, 1.4rem + 2.8vw, 3.5rem);
+  font-size: clamp(1.75rem, 1.2rem + 2.2vw, 2.9rem);
   font-weight: 400;
   line-height: 1.05;
   letter-spacing: -0.02em;
@@ -422,7 +454,7 @@ body:not(.is-ready) .card { transition: none; }
 }
 
 .readout__desc {
-  margin: 10px auto 0;
+  margin: 6px auto 0;
   min-height: 1lh;
   color: var(--ink-soft);
   text-wrap: pretty;
@@ -461,8 +493,18 @@ body:not(.is-ready) .card { transition: none; }
      est seule, elle peut donc prendre toute la largeur, et le masque de bords
      n'a plus rien à effacer. Il faut même le retirer, sinon c'est elle qu'il
      entamerait. */
-  :root { --card-w: clamp(200px, 94vw, 640px); }
+  :root { --card-w: clamp(200px, 96vw, 640px); }
   .ring { -webkit-mask-image: none; mask-image: none; }
+
+  /* Le bandeau revient dans le flux, et la réserve latérale du texte saute
+     avec lui : 320px de marges sur une fenêtre de téléphone ne laisseraient
+     pas de quoi écrire. On y perd la rangée de hauteur, mais sur un écran
+     étroit la carte est de toute façon bridée par la largeur, pas par la
+     hauteur, donc cette rangée ne coûte aucun pixel de visuel. */
+  body { grid-template-rows: auto auto 1fr auto; }
+  .masthead { position: relative; }   /* déjà premier dans le DOM */
+  .readout { max-width: min(88ch, 92vw); }
+
   .arrow { opacity: 1; }              /* pas de survol au doigt */
   .hint { display: none; }            /* pas de clavier non plus */
 }

@@ -80,9 +80,18 @@ avec la même convention (`body.dark`, clé `archipel_theme`, clair par défaut)
 
 Trois voix, sur des axes contrastés :
 
-- **Instrument Serif** pour le nom du projet. Une seule graisse, grande taille.
-- **IBM Plex Sans** pour la description.
-- **IBM Plex Mono** pour les repères : marque, compteur, domaine, aide clavier.
+- **Fraunces** pour le nom du projet. Une seule graisse, grande taille, axe
+  optique activé.
+- **IBM Plex Sans** pour l'accroche.
+- **IBM Plex Mono** pour les repères : compteur et bouton de thème.
 
 Plex Sans et Plex Mono viennent de la même superfamille, elles s'accordent sans
 se ressembler. Le sérif tranche franchement sur les deux.
+
+Le nom était en **Instrument Serif**, écarté sur un constat mesurable : à
+hauteur de capitale égale, il écrivait « Citations » en 302px là où Georgia en
+prend 398, soit **24% plus étroit**. C'est un sérif de titrage condensé, et les
+noms de projet avaient l'air d'avoir été étirés en hauteur. Fraunces remonte le
+rapport à 4.81 contre 4.08, sans aller jusqu'à la neutralité de Georgia.
+Critère à garder pour tout remplaçant : **des proportions normales**, pas un
+condensé.

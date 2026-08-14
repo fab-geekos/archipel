@@ -57,7 +57,14 @@
      modes puisqu'il recouvre une image. Ne bascule donc pas. */
   --on-scrim:  oklch(0.970 0.006 205);
 
-  --font-display: "Instrument Serif", Georgia, serif;
+  /* POUR CHANGER LE SÉRIF DES TITRES : cette ligne, plus la famille dans le
+     lien Google Fonts de index.html. Rien d'autre.
+     Le critère qui a fait écarter Instrument Serif est mesurable et vaut pour
+     tout remplaçant : à hauteur de capitale égale, il écrivait « Citations »
+     en 302px là où Georgia en prend 398, soit 24% plus étroit. Un sérif de
+     titrage condensé donne aux noms l'air d'avoir été étirés en hauteur.
+     Viser un sérif de proportions normales. */
+  --font-display: "Fraunces", Georgia, serif;
   --font-sans:    "IBM Plex Sans", system-ui, sans-serif;
   --font-mono:    "IBM Plex Mono", ui-monospace, monospace;
 
@@ -143,9 +150,10 @@ body {
   --isle-h: 168;
   margin: 0;
   display: grid;
-  /* Trois rangées seulement : texte, scène, points. Le bandeau du haut est
-     sorti du flux (cf. `.masthead`), il n'occupe plus de rangée. */
-  grid-template-rows: auto 1fr auto;
+  /* Nom, scène, accroche, points. Le texte encadre le visuel au lieu de
+     s'empiler sous lui. Le bandeau du haut est sorti du flux
+     (cf. `.masthead`), il n'occupe pas de rangée. */
+  grid-template-rows: auto 1fr auto auto;
   /* La page occupe exactement l'écran et ne défile jamais : la molette est
      réservée au changement d'île. La carte étant déjà plafonnée à 45% de la
      hauteur, tout tient sans être coupé. */
@@ -413,11 +421,19 @@ body:not(.is-ready) .card { transition: none; }
 
 /* --- Lecture ---------------------------------------------------------------- */
 
+.readout {
+  max-width: min(88ch, 84vw);
+  margin-inline: auto;
+  text-align: center;
+}
+
 /* Le troisième terme du `min()` est une réserve, pas de la marge décorative :
-   le bandeau flotte maintenant dans le coin haut droit, à la hauteur exacte de
-   ce bloc. 170px de chaque côté couvrent le compteur, la gouttière et le
-   bouton rond, plus de quoi respirer ; le bloc étant centré, il ne peut donc
-   jamais venir buter dessous, quelle que soit la largeur de fenêtre.
+   le bandeau flotte dans le coin haut droit, à la hauteur exacte de ce bloc.
+   170px de chaque côté couvrent le compteur, la gouttière et le bouton rond,
+   plus de quoi respirer ; le bloc étant centré, il ne peut donc jamais venir
+   buter dessous, quelle que soit la largeur de fenêtre.
+   Elle ne concerne que le nom : l'accroche est passée sous le visuel, à
+   l'autre bout de la page, elle n'a rien à esquiver.
    ⚠️ Une réserve en `padding` ferait tout autre chose : `box-sizing` étant en
    `border-box`, elle se prendrait SUR le `max-width` au lieu de s'y ajouter,
    et sur une fenêtre moyenne il ne resterait que 400px pour écrire, de quoi
@@ -425,10 +441,8 @@ body:not(.is-ready) .card { transition: none; }
    deux lignes chez un seul projet fait bouger la scène à chaque changement
    d'île, exactement ce que les hauteurs réservées empêchent.
    Sous 720px le bandeau retourne dans le flux et la réserve saute. */
-.readout {
+.readout--name {
   max-width: min(88ch, 84vw, 100vw - 340px);
-  margin-inline: auto;
-  text-align: center;
 }
 
 /* La sur-ligne mono (« Passages de lecture ») a été retirée à la demande de
@@ -460,8 +474,16 @@ body:not(.is-ready) .card { transition: none; }
   font-family: var(--font-display);
   font-size: clamp(1.75rem, 1.2rem + 2.2vw, 2.9rem);
   font-weight: 400;
-  line-height: 1.05;
-  letter-spacing: -0.02em;
+  line-height: 1.1;
+  /* Interlettrage neutre. Il était à -0.02em, hérité de l'époque où le titre
+     était en sérif condensé : sur une lettre déjà étroite, un serrage négatif
+     en rajoute et accentue la verticalité. Sur un sérif de proportions
+     normales il n'y a rien à rattraper. */
+  letter-spacing: 0;
+  /* L'axe optique de Fraunces. Sans lui, un dessin calibré pour du texte
+     courant se contente d'être agrandi, et les pleins et déliés sortent trop
+     lourds au grand corps. */
+  font-optical-sizing: auto;
   text-wrap: balance;
 }
 
@@ -473,7 +495,9 @@ body:not(.is-ready) .card { transition: none; }
    qu'ils étaient rigoureusement égaux à la mesure. À 1.35, l'écart mesuré et
    l'écart vu coïncident. */
 .readout__desc {
-  margin: 6px auto 0;
+  /* Aucune marge haute : l'écart avec le visuel est celui de `--rhythm`,
+     réservé dans la scène, exactement comme au-dessus du nom. */
+  margin: 0;
   min-height: 1lh;
   line-height: 1.35;
   color: var(--ink-soft);
@@ -482,9 +506,13 @@ body:not(.is-ready) .card { transition: none; }
 
 /* --- Pied ------------------------------------------------------------------- */
 
+/* Les points appartiennent à l'accroche plus qu'au visuel : ils s'en écartent
+   beaucoup moins que de `--rhythm`, sinon le bas de page se disloque en trois
+   éléments flottants au lieu d'un bloc qui ferme la composition. */
 .footer {
   display: grid;
   justify-items: center;
+  margin-top: clamp(8px, 1.1vh, 14px);
 }
 
 .dots {
@@ -524,9 +552,10 @@ body:not(.is-ready) .card { transition: none; }
   /* Le bandeau revenu dans le flux a besoin d'une gouttière, sinon il touche
      le titre. Elle ne coûte rien au visuel ici : sur un écran étroit la carte
      est bridée par la largeur, la scène a de la hauteur à revendre. */
-  body { grid-template-rows: auto auto 1fr auto; gap: clamp(8px, 1.5vh, 16px); }
+  body { grid-template-rows: auto auto 1fr auto auto; gap: clamp(8px, 1.5vh, 16px); }
   .masthead { position: relative; }   /* déjà premier dans le DOM */
-  .readout { max-width: min(88ch, 92vw); }
+  .readout--name { max-width: min(88ch, 92vw); }
+  .footer { margin-top: 0; }          /* la gouttière de grille s'en charge */
 
   .arrow { opacity: 1; }              /* pas de survol au doigt */
   .hint { display: none; }            /* pas de clavier non plus */

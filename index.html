@@ -12,7 +12,12 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%23bdf1f2'/%3E%3Cpath%20d='M3%2021.5%20Q11%208%2019%2021.5%20Z'%20fill='%230f3b2f'/%3E%3Cpath%20d='M18%2021.5%20Q23.5%2013%2029%2021.5%20Z'%20fill='%230f3b2f'%20opacity='.5'/%3E%3Cpath%20d='M4%2025.8%20q3%20-2.4%206%200%20t6%200%20t6%200%20t6%200'%20fill='none'%20stroke='%231c8a86'%20stroke-width='2'%20stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;450&family=Instrument+Serif&display=swap">
+<!-- Fraunces remplace Instrument Serif pour le nom du projet : à hauteur de
+     capitale égale, Instrument Serif écrivait « Citations » 24% plus étroit que
+     Georgia, ce qui donnait aux titres l'air d'avoir été étirés en hauteur.
+     L'axe `opsz` est demandé jusqu'à 144 : c'est lui qui adapte le dessin au
+     grand corps, sans quoi la lettre reste calibrée pour du texte courant. -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;450&display=swap">
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -21,7 +26,7 @@
      La clé est répétée ici volontairement, c'est le prix du zéro clignotement. -->
 <script>if (localStorage.getItem("archipel_theme") === "dark") document.body.classList.add("dark");</script>
 
-  <a class="skip" href="#readout">Aller à la description du projet</a>
+  <a class="skip" href="#readout">Aller au projet affiché</a>
 
   <header class="masthead">
     <span class="counter" id="counter" aria-hidden="true"></span>
@@ -29,13 +34,14 @@
             aria-label="Changer de thème" title="Mode clair / sombre">🌙</button>
   </header>
 
-  <!-- Le bloc de texte est AVANT la scène : le nom du projet se lit au-dessus
-       de son visuel. L'ordre du DOM suit l'ordre visuel, rien n'est réordonné
-       en CSS, donc la lecture au clavier et au lecteur d'écran reste la même
-       que celle de l'oeil. -->
-  <section class="readout" id="readout" aria-live="polite">
+  <!-- Le nom est AVANT la scène, l'accroche APRÈS. Le texte encadre le visuel
+       au lieu de s'empiler d'un seul côté : on lit le projet, on regarde
+       l'île, la formule ferme la composition juste au-dessus des points.
+       Deux blocs séparés dans le DOM, dans l'ordre où l'oeil les prend : rien
+       n'est réordonné en CSS, donc la lecture au clavier et au lecteur
+       d'écran suit exactement la lecture visuelle. -->
+  <section class="readout readout--name" id="readout" aria-live="polite">
     <h1 class="readout__name" id="name"></h1>
-    <p class="readout__desc" id="desc"></p>
   </section>
 
   <main class="stage">
@@ -48,6 +54,10 @@
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 5 7 7-7 7"/></svg>
     </button>
   </main>
+
+  <section class="readout readout--desc" aria-live="polite">
+    <p class="readout__desc" id="desc"></p>
+  </section>
 
   <footer class="footer">
     <div class="dots" id="dots" role="group" aria-label="Choisir un projet"></div>

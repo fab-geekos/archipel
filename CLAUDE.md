@@ -141,12 +141,14 @@ qui reste correct.
    Les descriptions ne décrivent pas, ce sont des **accroches** : « Moins de
    bruit, plus d'action. » Fabien reconnaît ses apps à leur visuel, la ligne de
    texte sert au ton, pas à l'information.
-7. **Nom du projet affiché AU-DESSUS du carrousel, pas sur la carte.** L'image
-   doit rester pleine. Le nom sur la carte n'apparaît que dans le panneau
-   d'attente, tant qu'il n'y a pas d'image. Le bloc de texte était sous le
-   carrousel jusqu'à ce que Fabien demande l'inverse : on lit le nom, puis on
-   regarde l'île. L'ordre du DOM suit l'ordre visuel, rien n'est réordonné en
-   CSS.
+7. **Le texte encadre le visuel, il ne s'empile pas d'un seul côté.** Le nom
+   au-dessus du carrousel, l'accroche au-dessous, juste avant les points. Rien
+   sur la carte : l'image doit rester pleine, et le nom n'y apparaît que dans
+   le panneau d'attente tant qu'il n'y a pas de visuel.
+   Tout était sous le carrousel à l'origine ; Fabien a d'abord fait remonter le
+   bloc entier, puis redescendre la seule accroche. Ce sont **deux `<section>`
+   distinctes** dans le HTML, placées dans l'ordre où l'oeil les prend : rien
+   n'est réordonné en CSS, donc la lecture au clavier suit la lecture visuelle.
    **Retirés à la demande de Fabien (ne pas les remettre) :** la signature
    « archipel » en haut à gauche, l'aide clavier du bas, l'adresse du projet
    sous la description, et la **sur-ligne mono** (« Passages de lecture ») qui

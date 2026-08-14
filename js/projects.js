@@ -27,7 +27,7 @@ export const PROJECTS = [
     name: "Todo",
     tagline: "Tâches et priorités",
     description:
-      "Gestion de tâches sur mesure. Agenda du jour et de la semaine, matrice d'Eisenhower, projets, contacts, listes de courses et de voyage. Deux espaces indépendants, pro et perso.",
+      "Moins de bruit, plus d'action.",
     url: "https://fab-geekos.github.io/todo/",
     hue: 248,
     image: null,
@@ -37,7 +37,7 @@ export const PROJECTS = [
     name: "Citations",
     tagline: "Passages de lecture",
     description:
-      "Les passages surlignés sur la liseuse, relus dans l'ordre du livre ou tirés au hasard. Bibliothèque illustrée par les couvertures, import direct des fichiers de la liseuse.",
+      "Les pages passent, les mots restent.",
     url: "https://citations-b350f.web.app",
     hue: 32,
     image: "images/citations.webp",
@@ -47,7 +47,7 @@ export const PROJECTS = [
     name: "Jauge d'énergie",
     tagline: "Le bilan du réveil",
     description:
-      "Sommeil, corps, alimentation, stress, charge mentale. Quelques réponses au réveil et la jauge donne le niveau d'énergie disponible pour la journée qui commence.",
+      "Parce que «ça va» ne suffit pas.",
     url: "https://fab-geekos.github.io/energy-accounting/",
     hue: 78,
     image: null,
@@ -57,7 +57,7 @@ export const PROJECTS = [
     name: "Energy Accounting",
     tagline: "La journée en flux",
     description:
-      "La comptabilité de la journée, à partir de la jauge du matin. D'un côté ce qui draine, salle blanche, réunions, visios. De l'autre ce qui recharge, sieste, silence, pauses.",
+      "Tu finis ta journée. Mais à combien ?",
     url: "https://fab-geekos.github.io/energy-accounting/energy.html",
     hue: 328,
     image: null,
@@ -67,7 +67,7 @@ export const PROJECTS = [
     name: "Capitales du monde",
     tagline: "Quiz de géographie",
     description:
-      "Les capitales de la planète, à explorer continent par continent ou à réviser en quiz, sur une sélection de pays ou sur le monde entier.",
+      "Il est capital de connaître sa géographie.",
     url: "https://fab-geekos.github.io/capitalsquizz/",
     hue: 168,
     image: null,
@@ -77,7 +77,7 @@ export const PROJECTS = [
     name: "Vocabulaire anglais",
     tagline: "Mots et expressions",
     description:
-      "Le carnet de vocabulaire anglais, révisé par répétition espacée dans les deux sens. Correction tolérante à la frappe, tous les sens affichés, pièges de prononciation notés.",
+      "Bryan is in the kitchen.",
     url: "https://voc-anglais-f5973.web.app",
     hue: 123,
     image: null,

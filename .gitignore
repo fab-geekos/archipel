@@ -11,6 +11,11 @@ jeton*
 *.pem
 *.key
 
+# Fichiers d'origine des visuels (les PNG lourds sortis d'ImageFX). Seule la
+# version webp de images/ part en ligne. A garder ici plutot que sur le bureau :
+# le projet reste autonome, et rien de lourd ne transite par GitHub.
+sources/
+
 # Dependances / OS / editeurs
 node_modules/
 .DS_Store

@@ -40,7 +40,7 @@ export const PROJECTS = [
       "Les passages surlignés sur la liseuse, relus dans l'ordre du livre ou tirés au hasard. Bibliothèque illustrée par les couvertures, import direct des fichiers de la liseuse.",
     url: "https://citations-b350f.web.app",
     hue: 32,
-    image: null,
+    image: "images/citations.webp",
   },
   {
     id: "energie-matin",

@@ -67,21 +67,23 @@
   --font-sans:    "IBM Plex Sans", system-ui, sans-serif;
   --font-mono:    "IBM Plex Mono", ui-monospace, monospace;
 
-  /* FORMAT DES VISUELS. Seul endroit à changer si les images ne sont pas
-     carrées : 4/3 pour du paysage, 4/5 pour du portrait. Tout le reste suit,
-     et `aspect-ratio` garantit qu'aucune image ne se déforme jamais. */
-  --card-ar-w: 1;
-  --card-ar-h: 1;
+  /* FORMAT DES VISUELS. Seul endroit à changer si le format des images change :
+     tout le reste suit, et `aspect-ratio` garantit qu'aucune image ne se
+     déforme jamais.
+     16/9 = le paysage sorti par ImageFX, qui livre 836x466 (soit 1.794, le
+     16:9 à 1% près). L'écart est absorbé par `object-fit: cover`, invisible. */
+  --card-ar-w: 16;
+  --card-ar-h: 9;
 
-  /* Taille SOUHAITÉE de la carte, à partir de la largeur d'écran. Le plafond
-     n'est pas arbitraire : au-delà, la voisine la plus éloignée sort du cadre
-     et se fait couper net au bord au lieu de s'effacer. Il va de pair avec les
-     décalages de `LEVELS` dans app.js et avec le nombre de voisines affichées.
-     La taille RÉELLE est en plus plafonnée par la hauteur que la scène a
-     vraiment (cf. `.card`), et non par une fraction de fenêtre : les textes du
-     bas occupent une hauteur fixe, donc une fenêtre courte laisse beaucoup
-     moins de place qu'un simple pourcentage ne le laisse croire. */
-  --card-w: clamp(240px, 40vw, 700px);
+  /* Taille SOUHAITÉE de la carte, à partir de la largeur d'écran.
+     ⚠️ EN PAYSAGE, CE N'EST PRESQUE JAMAIS CETTE VALEUR QUI DÉCIDE. Une carte
+     16/9 est basse : sur un écran ordinaire, c'est la hauteur libre de la scène
+     qui la plafonne bien avant (cf. `.card`), et la largeur suit. Ce jeton ne
+     reprend la main que sur les fenêtres courtes et larges. C'est pour ça qu'il
+     peut être aussi généreux sans faire déborder quoi que ce soit.
+     Corollaire : pour agrandir les visuels, on gagne de la HAUTEUR (padding,
+     gap, bloc de texte), pas de la largeur. */
+  --card-w: clamp(280px, 74vw, 1480px);
   --card-h: calc(var(--card-w) * var(--card-ar-h) / var(--card-ar-w));
   --radius: 14px;
 
@@ -145,8 +147,10 @@ body {
   height: 100svh;
   overflow: hidden;
   overscroll-behavior: none;
-  padding: clamp(16px, 2.4vw, 32px);
-  gap: clamp(12px, 2vh, 28px);
+  /* Marges et gouttières serrées à dessein : en format paysage, chaque pixel
+     rendu ici est un pixel de visuel en plus, multiplié par 1.78 en largeur. */
+  padding: clamp(12px, 1.6vw, 22px);
+  gap: clamp(8px, 1.2vh, 18px);
   background: var(--ground);
   color: var(--ink);
   font-family: var(--font-sans);
@@ -241,11 +245,22 @@ body > * { position: relative; z-index: var(--z-card); }
   overflow-x: clip;   /* l'axe vertical reste visible : les ombres portées passent */
 }
 
+/* Le fondu des bords est ce qui autorise une île centrale aussi large.
+   En paysage, une voisine posée à 0.46 largeur de carte finit au-delà du bord
+   de la fenêtre : sans ce masque elle serait tranchée net, avec lui elle se
+   dissipe. Le masque est sur `.ring` et non sur `.stage` parce que les flèches
+   sont justement rangées dans les 24 premiers pixels, elles s'effaceraient
+   avec les voisines.
+   Les paliers 9% et 91% ne sont pas décoratifs : l'île nette occupe au plus
+   74% de la largeur, soit de 13% à 87%, elle reste donc toujours en dehors du
+   dégradé. Remonter `--card-w` au-delà de 82vw lui mangerait les bords. */
 .ring {
   position: relative;
   width: 100%;
   height: 100%;
   min-height: 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 9%, #000 91%, transparent 100%);
+          mask-image: linear-gradient(90deg, transparent 0, #000 9%, #000 91%, transparent 100%);
 }
 
 /* Flèches : discrètes, elles n'apparaissent qu'au survol de la scène ou au
@@ -438,7 +453,12 @@ body:not(.is-ready) .card { transition: none; }
 /* --- Réglages d'écran -------------------------------------------------------- */
 
 @media (max-width: 720px) {
-  :root { --card-w: clamp(200px, 66vw, 360px); }
+  /* Sous ce seuil, `updateVisibility()` retombe à zéro voisine : l'île nette
+     est seule, elle peut donc prendre toute la largeur, et le masque de bords
+     n'a plus rien à effacer. Il faut même le retirer, sinon c'est elle qu'il
+     entamerait. */
+  :root { --card-w: clamp(200px, 94vw, 640px); }
+  .ring { -webkit-mask-image: none; mask-image: none; }
   .arrow { opacity: 1; }              /* pas de survol au doigt */
   .hint { display: none; }            /* pas de clavier non plus */
 }

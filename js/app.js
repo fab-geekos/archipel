@@ -55,11 +55,17 @@ themeToggle.addEventListener("click", () =>
 /* Décalage horizontal (en multiples de la largeur de carte), échelle, opacité
    et flou par niveau d'éloignement. Le décalage est volontairement inférieur à
    une largeur pleine : les voisines dépassent de derrière l'île nette au lieu
-   de s'aligner à côté d'elle. */
+   de s'aligner à côté d'elle.
+
+   Resserré au passage en 16/9 : ces valeurs sont des multiples de la largeur
+   de carte, et une carte paysage est presque deux fois plus large qu'une carte
+   carrée. Les décalages d'avant, appliqués à cette largeur, envoyaient les
+   voisines très au-delà du bord de la fenêtre. Ce qui dépasse encore est
+   dissipé par le masque de `.ring`, il n'y a plus de coupe nette. */
 const LEVELS = [
   { x: 0.00, s: 1.00, o: 1.00, blur: 0.0 },
-  { x: 0.56, s: 0.82, o: 0.55, blur: 1.6 },
-  { x: 0.94, s: 0.68, o: 0.26, blur: 3.2 },
+  { x: 0.46, s: 0.82, o: 0.55, blur: 1.6 },
+  { x: 0.78, s: 0.68, o: 0.26, blur: 3.2 },
 ];
 
 const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
@@ -219,10 +225,13 @@ function checkDescriptions() {
 /* Combien de voisines de chaque côté l'écran peut accueillir sans rogner sur la
    taille de l'île nette. Deux de chaque côté coûtent cher en largeur, donc on
    les réserve aux très grands écrans : ailleurs, mieux vaut une seule voisine
-   et un visuel central nettement plus grand. */
+   et un visuel central nettement plus grand.
+   Seuil du deuxième rang remonté avec le format paysage : une carte 16/9 est
+   large, et la deuxième voisine ne raconte plus rien si elle est entièrement
+   dissipée par le masque de bord. */
 function updateVisibility() {
   const w = innerWidth;
-  maxVisible = w >= 1600 ? 2 : w >= 760 ? 1 : 0;
+  maxVisible = w >= 1800 ? 2 : w >= 760 ? 1 : 0;
 }
 
 /* Un ResizeObserver plutôt que l'événement `resize` de la fenêtre : il se

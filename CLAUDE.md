@@ -52,6 +52,24 @@ en lignes n'a rien à mesurer, donc rien à rater. Ne pas revenir en arrière.
 Pour la même raison, la transition du texte est un **fondu seul**, sans aucun
 déplacement vertical. Demande explicite de Fabien.
 
+### La cadence verticale
+
+L'écart au-dessus du visuel et celui au-dessous des points sont **le même
+jeton**, `--rhythm`, en `clamp(14px, 2.4vh, 28px)`. Demande de Fabien : un
+écart identique de part et d'autre, et qui suive la taille d'écran.
+
+⚠️ Il n'est **pas** posé en `gap` de la grille, et `body` est justement en
+`gap: 0`. La scène est en `1fr` : une gouttière lui laisserait quand même tout
+l'espace restant et le visuel grandirait d'autant. `--rhythm` est retranché
+**à l'intérieur** de la scène, sur la hauteur de la carte
+(`height: min(var(--card-h), calc(100% - 2 * var(--rhythm)))`). La carte étant
+centrée, ce qui reste se partage en deux parts forcément égales : il n'y a
+aucun réglage à tenir à jour de part et d'autre, l'égalité est structurelle.
+
+C'est aussi ce qui a permis de retirer la sur-ligne **sans** agrandir le
+visuel, comme Fabien le demandait : les 25px rendus sont passés dans l'air
+autour de l'image, pas dans l'image.
+
 ### Replacement : deux signaux, pas un
 
 `relayout()` est branché sur un `ResizeObserver` **et** sur l'événement `resize`.
@@ -130,8 +148,10 @@ qui reste correct.
    regarde l'île. L'ordre du DOM suit l'ordre visuel, rien n'est réordonné en
    CSS.
    **Retirés à la demande de Fabien (ne pas les remettre) :** la signature
-   « archipel » en haut à gauche, l'aide clavier du bas, et l'adresse du projet
-   sous la description. Il reste le compteur, le bouton de thème et les points.
+   « archipel » en haut à gauche, l'aide clavier du bas, l'adresse du projet
+   sous la description, et la **sur-ligne mono** (« Passages de lecture ») qui
+   faisait doublon avec l'accroche. Il ne reste sous le nom qu'une seule ligne
+   de texte, plus le compteur, le bouton de thème et les points.
 
 9. **Le visuel central doit dominer la page**, demande explicite et répétée de
    Fabien. C'est le curseur à privilégier quand un arbitrage se présente. Deux

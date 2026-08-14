@@ -17,7 +17,6 @@
 
    id          identifiant court et unique (sert aux ancres et au débogage)
    name        nom affiché sous le carrousel
-   tagline     3 à 5 mots, au-dessus du nom
    description l'accroche, sous le nom. UNE ligne, 80 caractères maximum
    url         adresse ouverte au clic (nouvel onglet)
    hue         teinte OKLCH de l'île, 0-360. Colore le halo du fond et le
@@ -30,7 +29,6 @@ export const PROJECTS = [
   {
     id: "todo",
     name: "Todo",
-    tagline: "Tâches et priorités",
     description:
       "Moins de bruit, plus d'action.",
     url: "https://fab-geekos.github.io/todo/",
@@ -40,7 +38,6 @@ export const PROJECTS = [
   {
     id: "citations",
     name: "Citations",
-    tagline: "Passages de lecture",
     description:
       "Les livres passent, les mots restent.",
     url: "https://citations-b350f.web.app",
@@ -50,7 +47,6 @@ export const PROJECTS = [
   {
     id: "energie-matin",
     name: "Jauge d'énergie",
-    tagline: "Le bilan du réveil",
     description:
       "Parce que « ça va » ne suffit pas.",
     url: "https://fab-geekos.github.io/energy-accounting/",
@@ -60,7 +56,6 @@ export const PROJECTS = [
   {
     id: "energy-accounting",
     name: "Energy Accounting",
-    tagline: "La journée en flux",
     description:
       "Tu finis ta journée. Mais à combien ?",
     url: "https://fab-geekos.github.io/energy-accounting/energy.html",
@@ -70,7 +65,6 @@ export const PROJECTS = [
   {
     id: "capitales",
     name: "Capitales du monde",
-    tagline: "Quiz de géographie",
     description:
       "Il est capital de connaître sa géographie.",
     url: "https://fab-geekos.github.io/capitalsquizz/",
@@ -80,7 +74,6 @@ export const PROJECTS = [
   {
     id: "vocabulaire",
     name: "Vocabulaire anglais",
-    tagline: "Mots et expressions",
     description:
       "Bryan is in the kitchen.",
     url: "https://voc-anglais-f5973.web.app",

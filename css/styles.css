@@ -82,6 +82,15 @@
   --card-h: calc(var(--card-w) * var(--card-ar-h) / var(--card-ar-w));
   --radius: 14px;
 
+  /* CADENCE VERTICALE : l'écart au-dessus et au-dessous du visuel.
+     Un seul jeton pour les deux, c'est ce qui garantit qu'ils restent égaux,
+     et il est exprimé en `vh` pour suivre la hauteur d'écran comme le reste de
+     la page. Il n'est PAS posé en `gap` de la grille : la scène étant en `1fr`,
+     elle absorberait tout l'espace libre et le visuel grandirait d'autant. Il
+     est réservé À L'INTÉRIEUR de la scène (cf. `.card`), là où il tient le
+     visuel à distance sans le laisser gonfler. */
+  --rhythm: clamp(14px, 2.4vh, 28px);
+
   /* Sorties exponentielles, sans rebond. */
   --ease:      cubic-bezier(0.22, 1, 0.36, 1);
   --dur-move:  520ms;
@@ -146,7 +155,10 @@ body {
   /* Marges et gouttières serrées à dessein : en format paysage, chaque pixel
      rendu ici est un pixel de visuel en plus, multiplié par 1.78 en largeur. */
   padding: clamp(10px, 1.1vw, 14px);
-  gap: clamp(8px, 1vh, 14px);
+  /* Aucune gouttière de grille : les écarts autour du visuel sont tenus par
+     `--rhythm`, réservé dans la scène. Une gouttière ici s'y ajouterait et les
+     deux réglages se marcheraient dessus. */
+  gap: 0;
   background: var(--ground);
   color: var(--ink);
   font-family: var(--font-sans);
@@ -307,8 +319,12 @@ body > * { position: relative; z-index: var(--z-card); }
   top: 50%;
   left: 50%;
   /* La hauteur voulue, sauf si la scène est plus courte : alors c'est elle qui
-     commande. La largeur suit toujours, le format est intouchable. */
-  height: min(var(--card-h), 100%);
+     commande. La largeur suit toujours, le format est intouchable.
+     Les deux `--rhythm` retranchés sont l'air au-dessus et au-dessous du
+     visuel. La carte étant centrée dans la scène, ce qui reste se partage
+     forcément en deux parts égales : les deux écarts sont identiques par
+     construction, il n'y a aucun réglage à tenir à jour de part et d'autre. */
+  height: min(var(--card-h), calc(100% - 2 * var(--rhythm)));
   width: auto;
   aspect-ratio: var(--card-ar-w) / var(--card-ar-h);
   border-radius: var(--radius);
@@ -415,15 +431,11 @@ body:not(.is-ready) .card { transition: none; }
   text-align: center;
 }
 
-/* Volontairement peu espacée et en casse normale : c'est le sous-titre du
-   projet, pas un intitulé de section. */
-.readout__tagline {
-  margin: 0 0 6px;
-  color: var(--ink-muted);
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  letter-spacing: 0.04em;
-}
+/* La sur-ligne mono (« Passages de lecture ») a été retirée à la demande de
+   Fabien : elle faisait doublon avec l'accroche, qui dit la même chose en
+   mieux. Ne pas la remettre.
+   La place ainsi rendue n'est PAS allée au visuel, volontairement : elle est
+   passée dans l'air autour de lui. */
 
 /* HAUTEUR RÉSERVÉE, en lignes de texte.
    Le bloc doit occuper exactement la même place d'une île à l'autre, sinon la
@@ -453,9 +465,17 @@ body:not(.is-ready) .card { transition: none; }
   text-wrap: balance;
 }
 
+/* Interligne resserré par rapport au 1.6 du corps de page, pour une raison
+   optique et non décorative : l'accroche est la dernière chose avant le
+   visuel, et l'interligne d'un texte se répartit moitié au-dessus, moitié
+   au-dessous des lettres. À 1.6, la boîte descendait 5px plus bas que les
+   lettres et l'écart du haut PARAISSAIT plus grand que celui du bas alors
+   qu'ils étaient rigoureusement égaux à la mesure. À 1.35, l'écart mesuré et
+   l'écart vu coïncident. */
 .readout__desc {
   margin: 6px auto 0;
   min-height: 1lh;
+  line-height: 1.35;
   color: var(--ink-soft);
   text-wrap: pretty;
 }
@@ -501,7 +521,10 @@ body:not(.is-ready) .card { transition: none; }
      pas de quoi écrire. On y perd la rangée de hauteur, mais sur un écran
      étroit la carte est de toute façon bridée par la largeur, pas par la
      hauteur, donc cette rangée ne coûte aucun pixel de visuel. */
-  body { grid-template-rows: auto auto 1fr auto; }
+  /* Le bandeau revenu dans le flux a besoin d'une gouttière, sinon il touche
+     le titre. Elle ne coûte rien au visuel ici : sur un écran étroit la carte
+     est bridée par la largeur, la scène a de la hauteur à revendre. */
+  body { grid-template-rows: auto auto 1fr auto; gap: clamp(8px, 1.5vh, 16px); }
   .masthead { position: relative; }   /* déjà premier dans le DOM */
   .readout { max-width: min(88ch, 92vw); }
 

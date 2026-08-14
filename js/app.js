@@ -16,7 +16,6 @@ const ring = $("ring");
 const dotsEl = $("dots");
 const readout = $("readout");
 const els = {
-  tagline: $("tagline"),
   name: $("name"),
   desc: $("desc"),
   counter: $("counter"),
@@ -181,7 +180,6 @@ function layout() {
 function renderReadout(animate) {
   const p = PROJECTS[active];
 
-  els.tagline.textContent = p.tagline;
   els.name.textContent = p.name;
   els.desc.textContent = p.description;
   els.counter.textContent =

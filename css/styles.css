@@ -399,13 +399,17 @@ body:not(.is-ready) .card { transition: none; }
 /* HAUTEUR RÉSERVÉE, en lignes de texte.
    Le bloc doit occuper exactement la même place d'une île à l'autre, sinon la
    scène récupère ou cède de la place et TOUT remonte ou redescend au
-   changement de projet. On réserve donc 1 ligne pour le nom et 2 pour la
+   changement de projet. On réserve donc 1 ligne pour le nom et 1 pour la
    description, quelle que soit leur longueur réelle.
    Réservé en CSS et non mesuré en JS à dessein : une mesure dépend de l'état
    de mise en page au moment où elle est prise, et une mesure faite trop tôt
    restait figée fausse. Ici il n'y a rien à mesurer.
-   ⚠️ Corollaire : une description de plus de 2 lignes déborde. C'est la
-   contrainte posée dans projects.js, et app.js la signale en console. */
+   ⚠️ Corollaire : une description de plus d'UNE ligne déborde. C'est la
+   contrainte posée dans projects.js, et app.js la signale en console.
+   La réserve était de 2 lignes tant que les descriptions décrivaient les
+   projets. Elles sont devenues des accroches d'une ligne, la deuxième ligne
+   n'était donc plus qu'un blanc permanent, et en format paysage chaque ligne
+   rendue à la scène vaut 1.78 fois sa hauteur en largeur d'image. */
 .readout__name {
   margin: 0;
   min-height: 1lh;
@@ -419,7 +423,7 @@ body:not(.is-ready) .card { transition: none; }
 
 .readout__desc {
   margin: 10px auto 0;
-  min-height: 2lh;
+  min-height: 1lh;
   color: var(--ink-soft);
   text-wrap: pretty;
 }

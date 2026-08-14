@@ -24,10 +24,14 @@ const els = {
 
 const N = PROJECTS.length;
 
-/* Contrainte permanente posée par Fabien : une description tient en deux
-   lignes, jamais plus. Voir l'en-tête de projects.js. La place correspondante
-   est réservée en CSS (`.readout__desc { min-height: 2lh }`). */
-const MAX_DESC_CHARS = 180;
+/* Contrainte permanente posée par Fabien : une description tient sur UNE
+   ligne, jamais plus. Voir l'en-tête de projects.js. La place correspondante
+   est réservée en CSS (`.readout__desc { min-height: 1lh }`).
+
+   80 et non 88 : le bloc est large de `min(88ch, 84vw)`, donc une ligne pleine
+   fait bien 88 caractères sur un écran large, mais 84vw passe devant sur une
+   fenêtre étroite et la ligne se casse plus tôt. La marge couvre ce cas. */
+const MAX_DESC_CHARS = 80;
 
 /* --- Thème ------------------------------------------------------------------
    Même convention que todo et citations-livres : classe `dark` sur <body>,
@@ -208,7 +212,8 @@ const prev = () => goTo(active - 1);
 
 /* La place du bloc de texte est réservée en CSS (`min-height` en lignes), il
    n'y a donc rien à mesurer ici. Reste à signaler les descriptions qui
-   dépasseraient la réserve : une seule suffit à faire déborder le bloc. */
+   dépasseraient la réserve : une seule suffit à faire déborder le bloc, et
+   comme la page ne défile pas, ce qui déborde est perdu. */
 function checkDescriptions() {
   const tooLong = PROJECTS
     .filter((p) => p.description.length > MAX_DESC_CHARS)
@@ -217,7 +222,7 @@ function checkDescriptions() {
   if (tooLong.length) {
     console.warn(
       `Archipel : description trop longue, à ramener sous ${MAX_DESC_CHARS} ` +
-      `caractères pour tenir en 2 lignes : ${tooLong.join(", ")}`
+      `caractères pour tenir sur 1 ligne : ${tooLong.join(", ")}`
     );
   }
 }

@@ -32,9 +32,13 @@ tenu par `aspect-ratio`, la largeur suit toujours la hauteur.
 ### Les hauteurs sont réservées, pas mesurées
 
 Le bloc de texte occupe la même place quel que soit le projet : `min-height:
-1lh` sur le nom, `min-height: 2lh` sur la description. Sans ça, une description
+1lh` sur le nom, `min-height: 1lh` sur la description. Sans ça, une description
 plus courte raccourcit le bloc, la scène récupère la place, et tout remonte d'un
 cran au changement d'île.
+
+La description a été réservée sur deux lignes tant qu'elle décrivait le projet.
+Depuis qu'elle est une accroche d'une ligne, la seconde ligne n'était plus qu'un
+blanc permanent, et elle a été rendue à la scène.
 
 ⚠️ **Réservé en CSS, surtout pas mesuré en JS.** Une version précédente
 mesurait toutes les descriptions et figeait la hauteur sur la plus haute. Défaut
@@ -109,13 +113,15 @@ qui reste correct.
 5. **Ouverture en nouvel onglet**, l'archipel reste ouvert derrière.
 6. **Tailles fluides** (`clamp`) plutôt que des paliers, l'usage est
    multi-écrans.
-6bis. ⚠️ **Une description tient en DEUX LIGNES MAXIMUM**, soit environ
-   **180 caractères** (la plus longue actuelle en fait 176). Contrainte
-   permanente de Fabien, à respecter pour **tout projet ajouté plus tard**.
-   Raison : la hauteur du bloc de texte est figée sur la description la plus
-   haute, donc une seule description de trois lignes rabaisse la scène et
-   rétrécit les visuels de **tous** les projets. `freezeReadoutHeight()` émet
-   un `console.warn` si le cas se présente.
+6bis. ⚠️ **Une description tient sur UNE SEULE LIGNE**, soit **80 caractères**
+   (la plus longue actuelle en fait 42). Contrainte permanente de Fabien, à
+   respecter pour **tout projet ajouté plus tard**. Raison : la hauteur du bloc
+   de texte est réservée en CSS, donc une description plus longue déborde, et
+   la page ne défilant jamais, ce qui déborde est perdu. `checkDescriptions()`
+   émet un `console.warn` si le cas se présente.
+   Les descriptions ne décrivent pas, ce sont des **accroches** : « Moins de
+   bruit, plus d'action. » Fabien reconnaît ses apps à leur visuel, la ligne de
+   texte sert au ton, pas à l'information.
 7. **Nom du projet affiché sous le carrousel, pas sur la carte.** L'image doit
    rester pleine. Le nom sur la carte n'apparaît que dans le panneau d'attente,
    tant qu'il n'y a pas d'image.
@@ -128,14 +134,49 @@ qui reste correct.
    exactement ce que font todo et citations-livres, demande explicite de Fabien.
    Pour inverser le défaut, il suffit de changer la comparaison dans `setTheme`.
 
+## Les visuels
+
+**Format 16/9 paysage**, et non le portrait prévu au départ : c'est ce que
+sort ImageFX, en 2752x1536 (ratio 1.792, le 16:9 à 1% près, l'écart est absorbé
+par `object-fit: cover`).
+
+⚠️ **En paysage, c'est la HAUTEUR qui commande.** Une carte 16/9 est basse : la
+hauteur libre de la scène la plafonne bien avant `--card-w`. Pour agrandir les
+visuels, on prend donc de la hauteur ailleurs (padding, gap, lignes de texte),
+jamais de la largeur. Une ligne de texte rendue à la scène vaut 1.78 fois sa
+hauteur en largeur d'image.
+
+Fabricaton d'un visuel :
+
+1. Générer sur **Google ImageFX**, télécharger en 2K, déposer dans `sources/`
+   (dossier ignoré par git, les originaux ne partent pas en ligne).
+2. `python outils/image.py sources/<fichier> <id>` : redimensionne à 1600px de
+   large et écrit `images/<id>.webp`. Environ 170 Ko au lieu de 2,7 Mo.
+3. Renseigner `image` dans `projects.js`, une seule fois par projet. Ensuite,
+   réécrire le fichier suffit à changer le visuel.
+
+**Méthode de série** : un monde différent par île, ce qui est la métaphore de
+l'archipel prise au mot. Deux invariants seulement, et ils suffisent à tenir la
+série : un **bloc de style identique au mot près** dans tous les prompts, et
+**une ouverture sur la mer et des îles au loin** dans chaque image (fenêtre,
+arche, balcon, hublot). Leonardo.ai a été essayé pour sa référence de style,
+puis écarté : ImageFX rend mieux.
+
+Critère de choix d'une image : elle doit se lire **à petite taille, floutée,
+derrière une autre**. Donc un seul point focal, jamais un beau tableau dense.
+
 ## Avancement
 
 - Fait : structure, carrousel bouclé, clavier, molette, glissement, points,
-  flèches, halo par île, panneaux d'attente, adaptation écran, mouvement réduit.
-- Reste : **les images**. Un visuel portrait 4:5 par île dans `images/`, puis
-  renseigner `image` dans `projects.js`. La DA n'est pas encore arrêtée ;
-  méthode retenue : explorer sur Google ImageFX, puis produire la série sur
-  Leonardo.ai en donnant la première image validée comme référence de style.
+  flèches, halo par île, panneaux d'attente, adaptation écran, mouvement réduit,
+  passage en 16/9, outil de préparation des visuels.
+- Fait : le visuel de **Citations** (Terre du Milieu, scriptorium sur la mer).
+- Reste : les cinq autres visuels, un monde par île. Piste écartée pour
+  Energy Accounting : une veilleuse cyberpunk sous la pluie, qui va avec sa
+  teinte magenta.
+- Reste : accorder les teintes `hue` de `projects.js` aux visuels une fois
+  ceux-ci choisis. Repoussé volontairement, on ne peut pas régler la couleur du
+  halo sur des images qui n'existent pas.
 
 ## Règles de collaboration
 

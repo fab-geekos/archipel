@@ -3,17 +3,22 @@
    -----------------------------------------------------------------------------
    AJOUTER UN PROJET = ajouter un objet ci-dessous. Rien d'autre à toucher.
 
-   ⚠️ RÈGLE À TENIR : la description doit tenir en DEUX LIGNES MAXIMUM.
-   Soit environ 180 caractères, la plus longue actuelle en fait 176. Ce n'est
-   pas cosmétique : la hauteur du bloc de texte est figée sur la description la
-   plus haute, donc une seule description trop longue rabaisse la scène et
-   RÉTRÉCIT LES VISUELS DE TOUS LES PROJETS. Si c'est dépassé, la console
-   affiche un avertissement au chargement.
+   ⚠️ RÈGLE À TENIR : la description doit tenir sur UNE SEULE LIGNE.
+   Soit 80 caractères, la plus longue actuelle en fait 42. Ce n'est pas
+   cosmétique : la hauteur du bloc de texte est réservée en CSS, donc une seule
+   description trop longue déborde, et comme la page ne défile jamais, ce qui
+   déborde est perdu. Si c'est dépassé, la console affiche un avertissement au
+   chargement.
+
+   La réserve était de deux lignes quand les descriptions décrivaient les
+   projets. Elles sont devenues des accroches, la seconde ligne restait vide,
+   et elle a été rendue à la scène : en format paysage, une ligne de texte en
+   moins vaut près du double en largeur d'image.
 
    id          identifiant court et unique (sert aux ancres et au débogage)
    name        nom affiché sous le carrousel
    tagline     3 à 5 mots, au-dessus du nom
-   description 1 à 2 phrases, sous le nom, 180 caractères grand maximum
+   description l'accroche, sous le nom. UNE ligne, 80 caractères maximum
    url         adresse ouverte au clic (nouvel onglet)
    hue         teinte OKLCH de l'île, 0-360. Colore le halo du fond et le
                panneau d'attente. Prendre une valeur éloignée des voisines.
@@ -37,7 +42,7 @@ export const PROJECTS = [
     name: "Citations",
     tagline: "Passages de lecture",
     description:
-      "Les pages passent, les mots restent.",
+      "Les livres passent, les mots restent.",
     url: "https://citations-b350f.web.app",
     hue: 32,
     image: "images/citations.webp",
@@ -47,7 +52,7 @@ export const PROJECTS = [
     name: "Jauge d'énergie",
     tagline: "Le bilan du réveil",
     description:
-      "Parce que «ça va» ne suffit pas.",
+      "Parce que « ça va » ne suffit pas.",
     url: "https://fab-geekos.github.io/energy-accounting/",
     hue: 78,
     image: null,

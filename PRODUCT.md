@@ -80,18 +80,25 @@ avec la même convention (`body.dark`, clé `archipel_theme`, clair par défaut)
 
 Trois voix, sur des axes contrastés :
 
-- **Fraunces** pour le nom du projet. Une seule graisse, grande taille, axe
-  optique activé.
+- **Newsreader** pour le nom du projet. Une seule graisse, grande taille, axe
+  optique figé sur 72.
 - **IBM Plex Sans** pour l'accroche.
 - **IBM Plex Mono** pour les repères : compteur et bouton de thème.
 
 Plex Sans et Plex Mono viennent de la même superfamille, elles s'accordent sans
 se ressembler. Le sérif tranche franchement sur les deux.
 
-Le nom était en **Instrument Serif**, écarté sur un constat mesurable : à
-hauteur de capitale égale, il écrivait « Citations » en 302px là où Georgia en
-prend 398, soit **24% plus étroit**. C'est un sérif de titrage condensé, et les
-noms de projet avaient l'air d'avoir été étirés en hauteur. Fraunces remonte le
-rapport à 4.81 contre 4.08, sans aller jusqu'à la neutralité de Georgia.
-Critère à garder pour tout remplaçant : **des proportions normales**, pas un
-condensé.
+Deux polices ont été essayées puis écartées avant Newsreader, chaque fois sur
+un défaut du dessin. Il en reste **deux critères** à vérifier sur tout
+remplaçant futur :
+
+1. **Des proportions normales**, jamais un condensé. **Instrument Serif**
+   écrivait « Citations » en 302px là où Georgia en prend 398 à hauteur de
+   capitale égale, soit 24% plus étroit : les noms avaient l'air d'avoir été
+   étirés en hauteur.
+2. **Un J capital qui se termine, et qui reste sur la ligne de base.** Celui de
+   **Fraunces** s'arrête en filet, sans terminaison, et la lettre paraît cassée
+   à sa base. Le défaut saute aux yeux parce qu'une île s'appelle « Jauge
+   d'énergie ». Écartées pour un J qui plonge sous la ligne : Petrona,
+   Vollkorn, Spectral, Source Serif 4. Restaient Newsreader, Literata, Faustina
+   et Lora, toutes quatre valables.

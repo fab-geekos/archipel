@@ -12,12 +12,15 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%23bdf1f2'/%3E%3Cpath%20d='M3%2021.5%20Q11%208%2019%2021.5%20Z'%20fill='%230f3b2f'/%3E%3Cpath%20d='M18%2021.5%20Q23.5%2013%2029%2021.5%20Z'%20fill='%230f3b2f'%20opacity='.5'/%3E%3Cpath%20d='M4%2025.8%20q3%20-2.4%206%200%20t6%200%20t6%200%20t6%200'%20fill='none'%20stroke='%231c8a86'%20stroke-width='2'%20stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<!-- Fraunces remplace Instrument Serif pour le nom du projet : à hauteur de
-     capitale égale, Instrument Serif écrivait « Citations » 24% plus étroit que
-     Georgia, ce qui donnait aux titres l'air d'avoir été étirés en hauteur.
-     L'axe `opsz` est demandé jusqu'à 144 : c'est lui qui adapte le dessin au
-     grand corps, sans quoi la lettre reste calibrée pour du texte courant. -->
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;450&display=swap">
+<!-- Newsreader pour le nom du projet. Deux polices ont été écartées avant elle,
+     chaque fois sur un défaut du dessin : Instrument Serif était un condensé,
+     les titres semblaient étirés en hauteur ; Fraunces avait un J capital qui
+     s'arrête en filet, sans terminaison, la lettre paraissait cassée à sa base.
+     ⚠️ `opsz` est demandé à une valeur FIXE, 72, et non sur une plage. C'est
+     délibéré : sur une plage, `font-optical-sizing` fait varier le dessin avec
+     le corps du texte, et c'est précisément ce qui rendait le J de Fraunces
+     imprévisible d'une taille à l'autre. Ici la lettre est la même partout. -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@72,400&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;450&display=swap">
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>

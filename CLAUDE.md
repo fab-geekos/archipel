@@ -218,12 +218,12 @@ paraissent chacune évidente à qui relit le code sans cet historique.
    identifie la vraie source. Ne pas réintroduire d'ombre en croyant « finir »
    la carte.
 
-2. **Axe optique de Fraunces laissé en `font-optical-sizing: auto`.**
-   Conséquence connue et acceptée : à `opsz 46`, la valeur calculée pour un
-   titre de 46px, le **J capital descend sous la ligne de base**. Le figer sur
-   `opsz 144` le remet sur la ligne, mais donne un dessin de titrage nettement
-   plus contrasté que Fabien n'a pas retenu. Le J qui plonge est donc un choix,
-   pas un oubli.
+2. **Ne pas demander une police sur une PLAGE d'`opsz`.** Fraunces l'était, et
+   `font-optical-sizing` faisait donc varier le dessin avec le corps du texte :
+   le J capital changeait de forme d'une taille à l'autre. Les polices de
+   titrage sont demandées à une valeur d'`opsz` fixe dans le lien Google Fonts,
+   la lettre est alors la même partout. Fraunces a fini par être remplacée
+   (cf. la section Typographie de PRODUCT.md), mais la règle reste.
 
 3. **Molette : verrou à durée fixe de 380ms, pas de détection de fin de geste.**
    Conséquence connue et acceptée : un geste latéral appuyé, prolongé par

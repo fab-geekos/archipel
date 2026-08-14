@@ -68,12 +68,17 @@
 
   /* POUR CHANGER LE SÉRIF DES TITRES : cette ligne, plus la famille dans le
      lien Google Fonts de index.html. Rien d'autre.
-     Le critère qui a fait écarter Instrument Serif est mesurable et vaut pour
-     tout remplaçant : à hauteur de capitale égale, il écrivait « Citations »
-     en 302px là où Georgia en prend 398, soit 24% plus étroit. Un sérif de
-     titrage condensé donne aux noms l'air d'avoir été étirés en hauteur.
-     Viser un sérif de proportions normales. */
-  --font-display: "Fraunces", Georgia, serif;
+     Deux critères, tous deux nés d'un essai raté, à vérifier sur tout
+     remplaçant :
+     1. PROPORTIONS NORMALES. Instrument Serif écrivait « Citations » en 302px
+        là où Georgia en prend 398 à hauteur de capitale égale, soit 24% plus
+        étroit : les noms semblaient étirés en hauteur.
+     2. UN J CAPITAL QUI SE TERMINE. Celui de Fraunces s'arrête en filet, sans
+        terminaison, et la lettre paraît cassée à sa base. Ce détail se voit
+        d'autant plus que « Jauge d'énergie » commence par là.
+     Écartées aussi pour un J qui plonge sous la ligne de base : Petrona,
+     Vollkorn, Spectral, Source Serif 4. */
+  --font-display: "Newsreader", Georgia, serif;
   --font-sans:    "IBM Plex Sans", system-ui, sans-serif;
   --font-mono:    "IBM Plex Mono", ui-monospace, monospace;
 
@@ -492,10 +497,9 @@ body:not(.is-ready) .card { transition: none; }
      en rajoute et accentue la verticalité. Sur un sérif de proportions
      normales il n'y a rien à rattraper. */
   letter-spacing: 0;
-  /* L'axe optique de Fraunces. Sans lui, un dessin calibré pour du texte
-     courant se contente d'être agrandi, et les pleins et déliés sortent trop
-     lourds au grand corps. */
-  font-optical-sizing: auto;
+  /* Rien à régler ici : la police est demandée à un `opsz` fixe dans le lien
+     Google Fonts, donc le dessin ne dépend plus de la taille du texte. Voir le
+     commentaire de ce lien, c'est une leçon tirée de l'épisode Fraunces. */
   text-wrap: balance;
 }
 

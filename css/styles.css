@@ -50,13 +50,17 @@
   --art-l2: 0.585;  --art-c2: 0.090;
   --art-ink-l: 0.165;
 
-  /* Géométrie divisée par deux à la demande de Fabien : décalage, flou et
-     rétraction, les trois ensemble. Ne réduire que le flou étalerait l'ombre
-     au lieu de la resserrer, et ne réduire que le décalage la laisserait
-     déborder sous la carte. L'opacité, elle, ne bouge pas : c'est l'étendue
-     qui gênait, pas la densité. */
-  --shadow:    0 11px 22px -11px oklch(0.45 0.07 215 / 0.55);
-  --shadow-hi: 0 13px 28px -10px oklch(0.45 0.07 215 / 0.60);
+  /* PAS D'OMBRE PORTÉE, à l'essai. L'ombre a d'abord été réduite de moitié,
+     ce qui n'a pas suffi : diviser l'étendue ne change pas la densité, et le
+     trait sombre collé au bord bas de la carte restait le même, simplement
+     resserré. La carte se pose donc à plat sur le fond.
+     Le survol garde un retour : le bandeau « Ouvrir » et le curseur main.
+     Pour revenir en arrière, ces deux lignes suffisent, tout le reste passe
+     par les jetons :
+       --shadow:    0 11px 22px -11px oklch(0.45 0.07 215 / 0.55);
+       --shadow-hi: 0 13px 28px -10px oklch(0.45 0.07 215 / 0.60); */
+  --shadow:    none;
+  --shadow-hi: none;
 
   /* Encre du bandeau « Ouvrir », posé sur un voile sombre dans les deux
      modes puisqu'il recouvre une image. Ne bascule donc pas. */
@@ -135,8 +139,11 @@ body.dark {
   --art-l2: 0.300;  --art-c2: 0.055;
   --art-ink-l: 0.970;
 
-  --shadow:    0 12px 24px -10px oklch(0.09 0.02 168 / 0.90);
-  --shadow-hi: 0 14px 30px -9px  oklch(0.09 0.02 168 / 0.95);
+  /* Idem en sombre. Anciennes valeurs, si l'ombre revient :
+       --shadow:    0 12px 24px -10px oklch(0.09 0.02 168 / 0.90);
+       --shadow-hi: 0 14px 30px -9px  oklch(0.09 0.02 168 / 0.95); */
+  --shadow:    none;
+  --shadow-hi: none;
 }
 
 /* Teinte de l'île active. Déclarée en @property pour être animable : le halo

@@ -286,36 +286,18 @@ addEventListener("keydown", (e) => {
   }
 });
 
-/* Molette et pavé tactile : UN SEUL CRAN PAR GESTE, quelle que soit sa force.
-
-   Le piège est là : un geste latéral au pavé ou sur une molette inclinable
-   n'émet pas un événement, il en émet une rafale, souvent toutes les 10 à
-   15ms, prolongée par l'inertie bien après que le doigt a quitté la surface.
-   Un verrou à durée fixe ne peut rien contre ça : il laissait passer un cran
-   toutes les 380ms, donc un geste appuyé d'une seconde et demie faisait
-   défiler quatre îles d'un coup. Plus on poussait fort, plus on allait loin,
-   ce qui est exactement ce qu'on ne veut pas d'un lanceur.
-
-   On ne mesure donc plus le temps écoulé depuis le dernier CRAN, mais depuis
-   le dernier ÉVÉNEMENT. Le minuteur est réarmé à chaque événement de la
-   rafale, y compris ceux qu'on ignore : il n'expire donc qu'une fois la
-   rafale vraiment terminée, inertie comprise. Une impulsion, une île. */
-const WHEEL_IDLE = 140;   /* silence qui marque la fin d'un geste */
-let wheelBusy = false;
-let wheelIdleTimer = 0;
-
+/* Molette et pavé tactile : un cran par geste, pas un défilement continu. */
+let wheelLock = 0;
 addEventListener(
   "wheel",
   (e) => {
-    clearTimeout(wheelIdleTimer);
-    wheelIdleTimer = setTimeout(() => { wheelBusy = false; }, WHEEL_IDLE);
-
-    if (wheelBusy) return;
+    const now = performance.now();
+    if (now - wheelLock < 380) return;
 
     const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-    if (Math.abs(delta) < 12) return;   /* frémissement, pas une intention */
+    if (Math.abs(delta) < 12) return;
 
-    wheelBusy = true;
+    wheelLock = now;
     delta > 0 ? next() : prev();
   },
   { passive: true }

@@ -50,19 +50,17 @@
   --art-l2: 0.585;  --art-c2: 0.090;
   --art-ink-l: 0.165;
 
-  /* OMBRE TRÈS LÉGÈRE. Elle ne sert qu'à décoller la carte du fond, pas à la
-     mettre en scène : ce qui se voit dessous fait une dizaine de pixels, et
-     l'opacité est à 0.20 là où elle était à 0.55 au départ.
-     C'est la DENSITÉ qui a été corrigée, pas seulement l'étendue. Une première
-     tentative n'avait divisé que la géométrie, et l'ombre paraissait
-     identique : le trait le plus sombre est celui qui touche le bord bas de la
-     carte, et lui gardait sa noirceur d'origine.
-     Ne plus annuler le décalage par la rétraction (11px et -11px auparavant) :
-     le bord net de l'ombre tombait alors pile sur celui de la carte, ce qui
-     produit justement ce trait dur. Ici -8px pour 8px de décalage laisse le
-     dégradé commencer avant. */
-  --shadow:    0 8px 20px -8px oklch(0.45 0.07 215 / 0.20);
-  --shadow-hi: 0 12px 26px -8px oklch(0.45 0.07 215 / 0.28);
+  /* PAS D'OMBRE PORTÉE, à l'essai. L'ombre a d'abord été réduite de moitié,
+     ce qui n'a pas suffi : diviser l'étendue ne change pas la densité, et le
+     trait sombre collé au bord bas de la carte restait le même, simplement
+     resserré. La carte se pose donc à plat sur le fond.
+     Le survol garde un retour : le bandeau « Ouvrir » et le curseur main.
+     Pour revenir en arrière, ces deux lignes suffisent, tout le reste passe
+     par les jetons :
+       --shadow:    0 11px 22px -11px oklch(0.45 0.07 215 / 0.55);
+       --shadow-hi: 0 13px 28px -10px oklch(0.45 0.07 215 / 0.60); */
+  --shadow:    none;
+  --shadow-hi: none;
 
   /* Encre du bandeau « Ouvrir », posé sur un voile sombre dans les deux
      modes puisqu'il recouvre une image. Ne bascule donc pas. */
@@ -141,10 +139,11 @@ body.dark {
   --art-l2: 0.300;  --art-c2: 0.055;
   --art-ink-l: 0.970;
 
-  /* Même géométrie qu'en clair, opacité plus haute : une ombre sombre sur un
-     fond sombre a besoin de plus pour exister, et elle reste discrète. */
-  --shadow:    0 8px 20px -8px oklch(0.09 0.02 168 / 0.45);
-  --shadow-hi: 0 12px 26px -8px oklch(0.09 0.02 168 / 0.55);
+  /* Idem en sombre. Anciennes valeurs, si l'ombre revient :
+       --shadow:    0 12px 24px -10px oklch(0.09 0.02 168 / 0.90);
+       --shadow-hi: 0 14px 30px -9px  oklch(0.09 0.02 168 / 0.95); */
+  --shadow:    none;
+  --shadow-hi: none;
 }
 
 /* Teinte de l'île active. Déclarée en @property pour être animable : le halo
@@ -493,15 +492,10 @@ body:not(.is-ready) .card { transition: none; }
      en rajoute et accentue la verticalité. Sur un sérif de proportions
      normales il n'y a rien à rattraper. */
   letter-spacing: 0;
-  /* AXE OPTIQUE FIGÉ SUR 144, le dessin de titrage. Ne pas remettre
-     `font-optical-sizing: auto` : il cale `opsz` sur la taille du texte, donc
-     46 pour ce titre, et à cette valeur intermédiaire le J CAPITAL DE FRAUNCES
-     DESCEND SOUS LA LIGNE DE BASE. « Jauge d'énergie » avait l'air de tomber.
-     Vérifié en rendant la police à trois valeurs : à 9 et à 144 le J se pose
-     sur la ligne, à 46 il plonge. 144 est de toute façon le bon réglage ici,
-     un titre de 46px n'est pas du labeur. */
-  font-optical-sizing: none;
-  font-variation-settings: "opsz" 144;
+  /* L'axe optique de Fraunces. Sans lui, un dessin calibré pour du texte
+     courant se contente d'être agrandi, et les pleins et déliés sortent trop
+     lourds au grand corps. */
+  font-optical-sizing: auto;
   text-wrap: balance;
 }
 

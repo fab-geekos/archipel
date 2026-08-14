@@ -204,6 +204,33 @@ puis écarté : ImageFX rend mieux.
 Critère de choix d'une image : elle doit se lire **à petite taille, floutée,
 derrière une autre**. Donc un seul point focal, jamais un beau tableau dense.
 
+## Essayé puis écarté (ne pas refaire)
+
+Trois « corrections » ont été appliquées puis annulées par Fabien. Elles
+paraissent chacune évidente à qui relit le code sans cet historique.
+
+1. **Ombre portée sous les cartes : il n'y en a pas, et c'est voulu.**
+   `--shadow` et `--shadow-hi` valent `none` dans les deux thèmes.
+   ⚠️ Le dégradé sombre qu'on voit au bas du visuel **au survol** n'est pas une
+   ombre portée : c'est `.card__open`, le voile qui porte le mot « Ouvrir ».
+   Il reste tel quel. La confusion entre les deux a coûté trois allers-retours,
+   l'ombre a été divisée par deux puis rendue très légère avant que Fabien
+   identifie la vraie source. Ne pas réintroduire d'ombre en croyant « finir »
+   la carte.
+
+2. **Axe optique de Fraunces laissé en `font-optical-sizing: auto`.**
+   Conséquence connue et acceptée : à `opsz 46`, la valeur calculée pour un
+   titre de 46px, le **J capital descend sous la ligne de base**. Le figer sur
+   `opsz 144` le remet sur la ligne, mais donne un dessin de titrage nettement
+   plus contrasté que Fabien n'a pas retenu. Le J qui plonge est donc un choix,
+   pas un oubli.
+
+3. **Molette : verrou à durée fixe de 380ms, pas de détection de fin de geste.**
+   Conséquence connue et acceptée : un geste latéral appuyé, prolongé par
+   l'inertie du pavé, fait franchir plusieurs îles. La version qui n'en laisse
+   passer qu'une par impulsion (minuteur de silence réarmé à chaque événement
+   de la rafale) a été écrite, vérifiée, puis écartée.
+
 ## Avancement
 
 - Fait : structure, carrousel bouclé, clavier, molette, glissement, points,

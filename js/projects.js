@@ -65,7 +65,7 @@ export const PROJECTS = [
       "Connaître sa géographie, c'est capitale.",
     url: "https://fab-geekos.github.io/capitalsquizz/",
     hue: 168,
-    image: null,
+    image: images/capitales.webp,
   },
   {
     id: "vocabulaire",

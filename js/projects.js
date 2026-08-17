@@ -44,8 +44,13 @@ export const PROJECTS = [
     hue: 32,
     image: "images/citations.webp",
   },
+  /* Une seule île depuis que les deux pages d'energy-accounting ont fusionné.
+     Il y en avait deux, « Jauge d'énergie » vers index.html et « Energy
+     Accounting » vers energy.html, qui sont désormais deux onglets du même
+     document. Deux îles pour un seul fichier auraient été deux entrées pour
+     une seule chose. */
   {
-    id: "energie-matin",
+    id: "energie",
     name: "Jauge d'énergie",
     description:
       "Parce que « ça va » ne suffit pas.",
@@ -54,19 +59,10 @@ export const PROJECTS = [
     image: null,
   },
   {
-    id: "energy-accounting",
-    name: "Energy Accounting",
-    description:
-      "Tu finis ta journée. Mais à combien ?",
-    url: "https://fab-geekos.github.io/energy-accounting/energy.html",
-    hue: 328,
-    image: null,
-  },
-  {
     id: "capitales",
     name: "Capitales du monde",
     description:
-      "Il est capital de connaître sa géographie.",
+      "Connaître sa géographie, c'est capitale.",
     url: "https://fab-geekos.github.io/capitalsquizz/",
     hue: 168,
     image: null,

@@ -237,9 +237,12 @@ paraissent chacune évidente à qui relit le code sans cet historique.
   flèches, halo par île, panneaux d'attente, adaptation écran, mouvement réduit,
   passage en 16/9, outil de préparation des visuels.
 - Fait : le visuel de **Citations** (Terre du Milieu, scriptorium sur la mer).
-- Reste : les cinq autres visuels, un monde par île. Piste écartée pour
-  Energy Accounting : une veilleuse cyberpunk sous la pluie, qui va avec sa
-  teinte magenta.
+- Reste : les quatre autres visuels, un monde par île.
+- ⚠️ **Cinq îles, plus six.** « Jauge d'énergie » et « Energy Accounting »
+  étaient deux entrées vers deux fichiers du même dépôt ; ces fichiers ont
+  fusionné en une page à onglets, l'île est donc unique et pointe vers la
+  racine. La piste visuelle retenue en son temps pour Energy Accounting, une
+  veilleuse cyberpunk sous la pluie, tombe avec elle.
 - Reste : accorder les teintes `hue` de `projects.js` aux visuels une fois
   ceux-ci choisis. Repoussé volontairement, on ne peut pas régler la couleur du
   halo sur des images qui n'existent pas.

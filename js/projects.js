@@ -62,7 +62,7 @@ export const PROJECTS = [
     id: "capitales",
     name: "Capitales du monde",
     description:
-      "Connaître sa géographie, c'est capitale.",
+      "Connaître sa géographie, c'est capital.",
     url: "https://fab-geekos.github.io/capitalsquizz/",
     hue: 168,
     image: "images/capitales.webp",

@@ -56,7 +56,7 @@ export const PROJECTS = [
       "Parce que « ça va » ne suffit pas.",
     url: "https://fab-geekos.github.io/energy-accounting/",
     hue: 78,
-    image: null,
+    image: "images/energie.webp",
   },
   {
     id: "capitales",

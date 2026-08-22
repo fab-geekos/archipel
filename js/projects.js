@@ -33,7 +33,7 @@ export const PROJECTS = [
       "Moins de bruit, plus d'action.",
     url: "https://fab-geekos.github.io/todo/",
     hue: 248,
-    image: null,
+    image: "images/todo.webp",
   },
   {
     id: "citations",
@@ -71,7 +71,7 @@ export const PROJECTS = [
     id: "vocabulaire",
     name: "Vocabulaire anglais",
     description:
-      "Bryan is in the kitchen.",
+      "Qu'est-ce à dire que ceci ?",
     url: "https://voc-anglais-f5973.web.app",
     hue: 123,
     image: null,

@@ -74,6 +74,6 @@ export const PROJECTS = [
       "Qu'est-ce à dire que ceci ?",
     url: "https://voc-anglais-f5973.web.app",
     hue: 123,
-    image: null,
+    image: "images/vocabulaire.webp",
   },
 ];

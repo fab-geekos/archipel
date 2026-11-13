@@ -32,7 +32,7 @@ export const PROJECTS = [
     description:
       "Moins de bruit, plus d'action.",
     url: "https://fab-geekos.github.io/todo/",
-    hue: 248,
+    hue: 265,
     image: "images/todo.webp",
   },
   {
@@ -41,7 +41,7 @@ export const PROJECTS = [
     description:
       "Mange bien, tu vivras vieux. Mange bon, tu vivras heureux.",
     url: "https://recettes-fabien.web.app/",
-    hue: 300,
+    hue: 30,
     image: "images/recettes.webp",
   },
   {
@@ -50,7 +50,7 @@ export const PROJECTS = [
     description:
       "Les livres passent, les mots restent.",
     url: "https://citations-b350f.web.app",
-    hue: 32,
+    hue: 85,
     image: "images/citations.webp",
   },
   /* Une seule île depuis que les deux pages d'energy-accounting ont fusionné.
@@ -64,7 +64,7 @@ export const PROJECTS = [
     description:
       "Parce que « ça va » ne suffit pas.",
     url: "https://fab-geekos.github.io/energy-accounting/",
-    hue: 78,
+    hue: 230,
     image: "images/energie.webp",
   },
   {
@@ -73,7 +73,7 @@ export const PROJECTS = [
     description:
       "Connaître sa géographie, c'est capital.",
     url: "https://fab-geekos.github.io/capitalsquizz/",
-    hue: 168,
+    hue: 145,
     image: "images/capitales.webp",
   },
   {
@@ -82,7 +82,7 @@ export const PROJECTS = [
     description:
       "Qu'est-ce à dire que ceci ?",
     url: "https://voc-anglais-f5973.web.app",
-    hue: 123,
+    hue: 60,
     image: "images/vocabulaire.webp",
   },
 ];

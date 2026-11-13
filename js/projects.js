@@ -36,6 +36,15 @@ export const PROJECTS = [
     image: "images/todo.webp",
   },
   {
+    id: "recettes",
+    name: "Recettes de cuisine",
+    description:
+      "Mange bien, tu vivras vieux. Mange bon, tu vivras heureux.",
+    url: "https://recettes-fabien.web.app/",
+    hue: 300,
+    image: "images/recettes.webp",
+  },
+  {
     id: "citations",
     name: "Citations",
     description:
